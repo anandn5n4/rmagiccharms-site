@@ -1,0 +1,2 @@
+Copy images for the automatic Work gallery into this folder, then refresh.
+Full instructions: ..\README.txt

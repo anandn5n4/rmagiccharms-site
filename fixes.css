@@ -1,0 +1,12 @@
+/* on-light header state — nav colour flips when over a light section */
+.site-header.on-light {
+  color: var(--bark);
+}
+.site-header.on-light .nav-cta {
+  border-color: rgba(255,255,255,.3);
+}
+
+/* filter hide */
+.work-grid .project-card.is-filtered-out {
+  display: none;
+}

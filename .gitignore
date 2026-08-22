@@ -1,0 +1,23 @@
+# Local server state
+.pid
+__pycache__/
+*.py[cod]
+
+# Instagram proxy cache
+.img_cache/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+
+# High-resolution source media. Cloudflare Pages allows at most 25 MiB per
+# static asset; deployable editions belong in resources/web/.
+resources/Ayyo shivaney.mp4
+resources/Kavya & yathish pre wed Gopalaswami hills-.mp4
+resources/Kavya & yathish pre wed Gopalaswami hills-1.mp4
+resources/ambient.mpeg
+
+# Additional source masters
+resources/source/
+resources/masters/

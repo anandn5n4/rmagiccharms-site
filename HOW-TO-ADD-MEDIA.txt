@@ -1,0 +1,95 @@
+R MAGIC CHARMS — HOW TO ADD PHOTOS, COUPLES, AND VIDEOS
+========================================================
+
+AUTOMATIC IMAGE SECTIONS
+------------------------
+For normal image updates, no code change is required. Copy images into:
+
+    resources/uploads/home/       -> Home page
+    resources/uploads/about/      -> Studio & Enquiries page
+    resources/uploads/portfolio/  -> Work page
+
+Refresh the website. Newest files appear first.
+
+See resources/uploads/README.txt for optional captions and credits.
+
+
+The website content is organized in one file:
+
+    content.js
+
+You do not need to edit app.js for normal photo or video updates.
+
+
+ADD A NEW COUPLE
+----------------
+1. Create a folder:
+
+       resources/couples/couple-name/
+
+2. Copy that couple's photos into the folder.
+   Recommended formats: JPG, JPEG, PNG, or WEBP.
+
+3. Open content.js and find "COUPLE STORIES".
+
+4. Copy one complete couple block, paste it after the last block, and update:
+   - slug: lowercase unique name, for example "anita-and-arun"
+   - title: the couple's display name
+   - type: PRE-WEDDING, MUHURTHAM, RECEPTION, etc.
+   - filter: pre-wedding, nalangu-haldi, muhurtham, or sangeet-reception
+   - location and year
+   - image: cover photo shown in the main gallery
+   - photos: every photo shown inside their story
+
+5. Use these photo sizes:
+   - large: full-width photograph
+   - medium: smaller offset photograph
+   - duo: place two consecutive photos side by side
+
+Example photo path:
+
+    resources/couples/anita-and-arun/cover.jpg
+
+
+ADD A NEW VIDEO
+---------------
+1. Copy the MP4 into:
+
+       resources/videos/
+
+2. Refresh the website.
+
+That is all. The server automatically discovers every supported video in this
+folder. It uses the filename as the film title and displays the new film on:
+   - the home page under "Newly Added Films"
+   - the Films page
+
+Use a clear filename because it becomes the displayed title:
+
+    Anita and Arun Wedding Film.mp4
+
+The two featured films already listed in content.js can still have custom
+posters, subtitles, types, and years.
+
+Example:
+
+    resources/videos/Anita and Arun Wedding Film.mp4
+
+
+INSTAGRAM
+---------
+The home page automatically fetches the newest @r_magic_charms posts.
+Photos open in the website viewer. Reels play inside the website.
+The visitor is sent to Instagram only after choosing "View this post on
+Instagram" or "See more on Instagram".
+
+
+CONTACT INQUIRIES
+-----------------
+The WhatsApp chat button and inquiry form both use:
+
+    +91 78923 22716
+
+The form creates a structured WhatsApp message with the visitor's name,
+mobile, event type, date, location, and details. The visitor reviews the
+message and taps Send, so the inquiry arrives directly in WhatsApp.
