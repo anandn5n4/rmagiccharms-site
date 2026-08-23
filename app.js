@@ -55,6 +55,12 @@ const featuredPhoto = index => {
   return pool.length ? pool[index % pool.length].photo : null;
 };
 
+// Some places in the layout are built around one chosen photograph. Naming the
+// album and frame keeps that choice explicit, and the pool still covers it if
+// the shoot is ever unpublished.
+const albumPhoto = (slug, id, fallbackIndex = 0) =>
+  albumBySlug(slug)?.photos.find(photo => photo.id === id) || featuredPhoto(fallbackIndex);
+
 const app = document.querySelector("#app");
 const header = document.querySelector("#site-header");
 const footer = document.querySelector("#site-footer");
@@ -536,7 +542,7 @@ function home() {
       </div>
       <div class="statement-visual" aria-hidden="true">
         <div class="statement-rings"></div>
-        <div class="statement-arch">${image(featuredPhoto(1), "Auspicious South Indian wedding ceremony")}</div>
+        <div class="statement-arch">${image(albumPhoto("latha-and-yathish", "06", 1), "Hands held at a South Indian wedding")}</div>
         <p>RITUAL · BLESSING · UNION</p>
       </div>
     </section>
