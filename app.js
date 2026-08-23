@@ -82,8 +82,9 @@ function pageFrame(kicker, title, copy) {
 }
 
 // ─── INSTAGRAM LIVE FEED ─────────────────────────────────────────────────────
-// Fetches real posts from @r_magic_charms via imginn.com API at page load.
-// Seed URLs (s10.imginn.com CDN) used as instant fallback if fetch fails.
+// Fetches real posts from @r_magic_charms via the local proxy when available.
+// Cloudflare Pages is static, so the fallback includes a complete second page
+// and keeps the in-site "View more" experience working in production.
 const INSTA_UID = "70367859285";
 const INSTA_SEED = [
   { src: IG.r4, alt: "Wedding ceremony — two lives become one", code: "DSwbF95Eslh", isVideo: false },
@@ -95,6 +96,10 @@ const INSTA_SEED = [
   { src: IG.r3, alt: "Jasmine and silk — wedding details", code: "DSwbF95Eslh", isVideo: false },
   { src: IG.r2, alt: "The laughter between the rituals", code: "DSwbF95Eslh", isVideo: false },
   { src: IG.r4, alt: "Golden hour portraits", code: "DSwbF95Eslh", isVideo: false },
+  { src: IG.p1, alt: "A recent celebration by R Magic Charms", code: "static-social-01", isVideo: false },
+  { src: IG.p2, alt: "Newly shared wedding moments", code: "static-social-02", isVideo: false },
+  { src: IG.p3, alt: "A story from our recent celebrations", code: "static-social-03", isVideo: false },
+  { src: IG.p4, alt: "South Indian wedding moments by R Magic Charms", code: "static-social-04", isVideo: false },
 ];
 
 async function fetchInstaFeed(cursor = "") {
