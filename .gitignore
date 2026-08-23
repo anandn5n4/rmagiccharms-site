@@ -3,21 +3,18 @@
 __pycache__/
 *.py[cod]
 
-# Instagram proxy cache
-.img_cache/
-
 # OS/editor files
 .DS_Store
 Thumbs.db
 .vscode/
 
-# Source media stays local. Only the small Studio reel and source-quality
-# homepage loop are deployed; complete films belong on YouTube.
-resources/*.mp4
-resources/*.mpeg
-!resources/About.mp4
-resources/web/*
-!resources/web/hero-loop.mp4
+# Playback media is not part of the photography website.
+*.mp4
+*.mpeg
+*.webm
+*.mov
+*.m4v
+resources/web/
 
 # Additional source masters
 resources/source/

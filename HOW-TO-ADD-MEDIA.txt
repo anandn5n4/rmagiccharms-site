@@ -1,5 +1,5 @@
-R MAGIC CHARMS — HOW TO ADD PHOTOS, COUPLES, AND YOUTUBE FILMS
-===============================================================
+R MAGIC CHARMS — HOW TO ADD PHOTOS AND COUPLES
+===============================================
 
 AUTOMATIC IMAGE SECTIONS
 ------------------------
@@ -51,32 +51,11 @@ Example photo path:
     resources/couples/anita-and-arun/cover.jpg
 
 
-ADD A YOUTUBE FILM
-------------------
-1. Upload the finished film to the official R Magic Charms YouTube channel.
-
-2. Copy the video ID from its URL. For:
-
-       https://www.youtube.com/watch?v=AbCdEf12345
-
-   the ID is:
-
-       AbCdEf12345
-
-3. Open content.js, find "WEDDING FILMS", and paste the ID into youtubeId.
-
-4. Update the title, subtitle, type, year, and poster if needed.
-
-The website embeds YouTube using the privacy-enhanced youtube-nocookie.com
-player. Large wedding films should not be copied into this repository.
-
-
 INSTAGRAM
 ---------
-The home page automatically fetches the newest @r_magic_charms posts.
-Photos open in the website viewer. Reels play inside the website.
-The visitor is sent to Instagram only after choosing "View this post on
-Instagram" or "See more on Instagram".
+The home page uses repository-hosted photographs so it remains fast and
+reliable on Cloudflare Pages. Update the Instagram gallery paths in content.js.
+Each photograph opens inside the website.
 
 
 CONTACT INQUIRIES

@@ -125,12 +125,6 @@ button,input,select,textarea{font:inherit}
 .offering-complete h3{font-size:clamp(28px,2.5vw,43px)}
 
 /* â”€â”€ VIDEO HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-.hero-video-wrap{position:absolute;inset:0;overflow:hidden}
-.hero-vid{width:100%;height:100%;object-fit:cover;filter:saturate(.85) contrast(1.04) brightness(.9)}
-.hero-video-overlay{position:absolute;inset:0;background:
-  linear-gradient(90deg,rgba(45,8,18,.68),transparent 58%,rgba(28,10,8,.2)),
-  linear-gradient(0deg,rgba(28,8,13,.7),transparent 58%),
-  linear-gradient(180deg,rgba(170,122,46,.14),transparent 38%)}
 
 /* hero CTA button */
 .hero-cta{display:inline-block;margin-top:30px;border:1px solid rgba(222,191,115,.65);border-radius:100px;padding:13px 25px;font:500 11px/1 var(--mono);letter-spacing:.08em;color:#f7e5b9;background:rgba(104,28,43,.25);backdrop-filter:blur(7px);transition:background .3s,color .3s}
@@ -144,13 +138,6 @@ button,input,select,textarea{font:inherit}
 .hero-badge-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:rgba(232,200,122,.85);font-size:22px;animation:badgeSpin 18s linear infinite reverse}
 
 /* â”€â”€ FILM TEASER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-.film-teaser{position:relative;min-height:min(56vw,760px);overflow:hidden;background:#0d0a06}
-.film-teaser-video{position:relative;height:min(56vw,760px)}
-.film-teaser-video video,.film-teaser-image{width:100%;height:100%;object-fit:cover;filter:saturate(.78) contrast(1.04) brightness(.72);transition:transform 1.4s cubic-bezier(.22,1,.36,1)}
-.film-teaser:hover .film-teaser-image{transform:scale(1.025)}
-.film-teaser-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 10.3vw;background:linear-gradient(90deg,rgba(14,8,3,.7),transparent 65%)}
-.film-teaser-overlay h2{font:400 clamp(44px,5.2vw,88px)/.94 var(--serif);letter-spacing:-.02em;color:#fff;margin:20px 0 32px}
-.film-teaser-overlay .eyebrow{color:var(--gold)}
 .text-link-light{color:var(--gold-hi);border-color:var(--gold-hi)}
 
 /* â”€â”€ INSTAGRAM GRID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -159,24 +146,14 @@ button,input,select,textarea{font:inherit}
 .insta-header h2{font:400 clamp(38px,4.5vw,72px)/.94 var(--serif);letter-spacing:-.02em;margin:12px 0 0}
 .insta-actions{display:flex;align-items:center;gap:22px}
 .insta-handle{font:500 12px var(--display);letter-spacing:.08em;text-transform:uppercase}
-.reel-sound-toggle{border:1px solid rgba(196,146,58,.45);border-radius:100px;background:transparent;color:var(--bark);min-height:38px;padding:0 16px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
-.reel-sound-toggle span{font-size:17px;color:var(--gold)}
-.reel-sound-toggle b{font:500 9px var(--mono);letter-spacing:.05em;text-transform:uppercase}
-.reel-sound-toggle:hover,.reel-sound-toggle.active{background:var(--bark);border-color:var(--bark);color:var(--paper)}
-.reel-sound-toggle.active span{color:var(--gold-hi)}
 .insta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .insta-cell{display:block;aspect-ratio:1;overflow:hidden;background:#e3d5bf;position:relative;border:0;padding:0;color:#fff;cursor:pointer;text-align:left}
-.insta-cell img,.insta-preview{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.82) contrast(1.02);transition:transform .7s cubic-bezier(.22,1,.36,1),filter .4s}
-.insta-cell:hover img,.insta-cell:hover .insta-preview{transform:scale(1.04);filter:saturate(1) contrast(1.04)}
+.insta-cell img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.82) contrast(1.02);transition:transform .7s cubic-bezier(.22,1,.36,1),filter .4s}
+.insta-cell:hover img{transform:scale(1.04);filter:saturate(1) contrast(1.04)}
 .insta-hover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:rgba(13,10,6,.52);opacity:0;transition:opacity .35s}
-.insta-cell:not(.insta-video):hover .insta-hover,.insta-cell:not(.insta-video):focus-visible .insta-hover{opacity:1}
-.insta-video .insta-hover{opacity:1;background:linear-gradient(0deg,rgba(13,10,6,.5),transparent 55%)}
-.insta-video .insta-hover b,.insta-video .insta-hover small{transform:translateY(105px)}
-.insta-video:hover .insta-hover{opacity:0}
+.insta-cell:hover .insta-hover,.insta-cell:focus-visible .insta-hover{opacity:1}
 .insta-hover b{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase}
 .insta-hover small{font:10px var(--sans);letter-spacing:.04em;color:rgba(255,255,255,.75)}
-.insta-video::after{content:"â–¶";position:absolute;right:13px;top:11px;font-size:16px;text-shadow:0 2px 8px rgba(0,0,0,.65);transition:opacity .3s}
-.insta-video:hover::after{opacity:0}
 .insta-shimmer{background:linear-gradient(90deg,#e8d9c3 25%,#f0e4d1 50%,#e8d9c3 75%);background-size:200% 100%;animation:igShimmer 1.4s ease-in-out infinite}
 @keyframes igShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .insta-footer{text-align:center;padding:50px 0 0}
@@ -184,34 +161,16 @@ button,input,select,textarea{font:inherit}
 .insta-more b{font:inherit}
 .insta-more:disabled{cursor:wait;opacity:.55}
 
-/* Instagram photo/reel viewer */
+/* Instagram photo viewer */
 .insta-viewer{position:fixed;inset:0;z-index:1000;background:rgba(8,6,4,.94);display:grid;place-items:center;padding:40px}
 .insta-viewer-content{max-width:min(900px,90vw);max-height:88vh;display:flex;flex-direction:column;align-items:center}
-.insta-viewer video,.insta-viewer img{display:block;max-width:100%;max-height:72vh;object-fit:contain;background:#000}
+.insta-viewer img{display:block;max-width:100%;max-height:72vh;object-fit:contain;background:#000}
 .insta-viewer-caption{width:100%;display:flex;justify-content:space-between;gap:30px;align-items:center;color:#fff;padding:18px 0 0}
 .insta-viewer-caption p{margin:0;max-width:600px;color:rgba(255,255,255,.75);font-size:13px}
 .insta-viewer-caption a{color:var(--gold-hi);font:10px var(--mono);letter-spacing:.05em;white-space:nowrap;border-bottom:1px solid rgba(232,200,122,.45);padding-bottom:5px}
 .insta-viewer-close{position:fixed;right:28px;top:20px;border:0;background:transparent;color:#fff;font:300 45px/1 var(--sans);cursor:pointer;z-index:1}
 
 /* â”€â”€ FILMS PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-.films-list{padding:0 3.1vw 160px;display:grid;gap:80px}
-.film-card.feature .film-card-video{width:100%;aspect-ratio:16/9;background:#0d0a06;overflow:hidden}
-.film-card.feature .film-card-video iframe{width:100%;height:100%;display:block;border:0}
-.film-card-info{padding:22px 0 0}
-.film-card-info h2{font:400 clamp(38px,4.5vw,72px)/.94 var(--serif);letter-spacing:-.02em;margin:8px 0 6px}
-.film-sub{font:11px var(--mono);letter-spacing:.08em;color:var(--muted);margin:0}
-.youtube-placeholder{position:relative;width:100%;height:100%;overflow:hidden;background:#0d0a06}
-.youtube-placeholder img{display:block;width:100%;height:100%;object-fit:cover;filter:var(--grade)}
-.youtube-placeholder-scrim{position:absolute;inset:0;background:
-  linear-gradient(0deg,rgba(5,5,7,.94),rgba(5,5,7,.1) 68%),
-  radial-gradient(circle at 50% 45%,transparent,rgba(5,5,7,.38))}
-.youtube-play{position:absolute;left:50%;top:45%;translate:-50% -50%;display:grid;place-items:center;
-  width:68px;height:68px;border:1px solid rgba(255,255,255,.42);border-radius:50%;
-  color:#fff;background:rgba(8,8,10,.38);backdrop-filter:blur(9px);font-size:18px;padding-left:4px}
-.youtube-placeholder-copy{position:absolute;left:clamp(20px,3vw,48px);right:clamp(20px,3vw,48px);
-  bottom:clamp(20px,3vw,42px);display:flex;justify-content:space-between;align-items:end;gap:24px}
-.youtube-placeholder-copy b{font:500 10px var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-hi)}
-.youtube-placeholder-copy span{max-width:340px;text-align:right;font:400 12px/1.6 var(--sans);color:var(--muted)}
 
 /* featured project */
 .featured-project{height:min(67vw,850px);position:relative;overflow:hidden;background:#c4a882}
@@ -296,10 +255,7 @@ footer{background:#3E111C;color:#F3E9DA;padding:0 3.1vw 25px;border-top:1px soli
 .dock-chat:hover{transform:translateY(-2px);background:#185f40}
 .dock-icons{display:flex;gap:10px}
 .dock-icons a{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#fbf1dd;box-shadow:0 5px 20px rgba(19,15,9,.16);color:var(--bark);transition:background .25s,transform .25s}
-.dock-icons .youtube svg{fill:#d32626;stroke:none;width:21px;height:21px}
-.dock-icons .youtube .fill-light{fill:#fff}
 .dock-icons a:hover{background:var(--gold);color:#fff;transform:translateY(-3px)}
-.dock-icons .youtube:hover svg{fill:#fff}
 
 /* page intro */
 .page-intro{padding:185px 10.3vw 100px;min-height:490px;background:radial-gradient(circle at 88% 22%,rgba(170,122,46,.12),transparent 20%),repeating-radial-gradient(circle at 100% 0,transparent 0 58px,rgba(104,28,43,.035) 59px 60px)}
@@ -353,13 +309,6 @@ footer{background:#3E111C;color:#F3E9DA;padding:0 3.1vw 25px;border-top:1px soli
 .next-link i{font:20px var(--mono);font-style:normal;padding-top:14px}
 
 /* about */
-.about-video-hero{position:relative;height:min(65vw,820px);overflow:hidden;background:#0d0a06}
-.about-vid{width:100%;height:100%;object-fit:cover;object-position:center 22%;filter:saturate(.7) contrast(1.05) brightness(.65)}
-.about-vid-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(14,8,3,.85) 0%,rgba(14,8,3,.25) 60%,transparent 100%)}
-.about-vid-text{position:absolute;bottom:8vw;left:10.3vw;color:#fff}
-.about-vid-text h1{font:400 clamp(52px,6.5vw,100px)/.88 var(--serif);letter-spacing:-.02em;margin:18px 0 0;color:#fff}
-.about-vid-text h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
-.about-vid-text .eyebrow{color:var(--gold)}
 .about-portrait{display:grid;grid-template-columns:1.1fr .9fr;gap:11vw;padding:120px 10.3vw 160px;align-items:center}
 .about-portrait>div{height:645px}
 .about-portrait img{height:100%;width:100%;object-fit:cover;filter:saturate(.72) contrast(1.02)}
@@ -541,9 +490,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   .about-portrait{display:block;padding:70px 20px 100px}
   .about-portrait>div{height:115vw;margin-bottom:30px}
   .about-portrait>p{font-size:29px}
-  .about-video-hero{height:100svh;min-height:680px;max-height:900px}
-  .about-vid{object-position:center 14%}
-  .about-vid-text{left:20px;right:20px;bottom:70px}
   .philosophy{padding:95px 20px;display:block}
   .philosophy>.eyebrow{margin-bottom:57px}
   .philosophy li{font-size:31px}
@@ -570,7 +516,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   .insta-hover{display:none}
   .insta-viewer{padding:55px 18px 25px}
   .insta-viewer-content{max-width:100%;max-height:90vh}
-  .insta-viewer video,.insta-viewer img{max-height:68vh}
+  .insta-viewer img{max-height:68vh}
   .insta-viewer-caption{display:block;padding-top:14px}
   .insta-viewer-caption a{display:inline-block;margin-top:12px}
   .insta-viewer-close{right:15px;top:12px}
@@ -581,26 +527,16 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   .uploaded-photo-grid figure{margin-bottom:25px}
   .uploaded-photo-grid img,.uploaded-photo-grid figure:nth-child(even) img{height:112vw}
   .music-btn{right:20px;bottom:22px}
-  /* video hero mobile */
+  /* hero mobile */
   .hero-badge{width:120px;height:120px;right:20px;top:auto;bottom:100px;transform:none;animation:badgeSpinMob 18s linear infinite}
   @keyframes badgeSpinMob{to{transform:rotate(360deg)}}
   .hero-badge-center{animation:badgeSpinMob 18s linear infinite reverse}
-  /* film teaser mobile */
-  .film-teaser{min-height:280px}
-  .film-teaser-video{height:280px}
-  .film-teaser-overlay{padding:0 20px}
-  .film-teaser-overlay h2{font-size:40px;margin:15px 0 22px}
   /* instagram mobile */
   .insta-section{padding:80px 20px 60px}
   .insta-header{display:block}
   .insta-actions{margin-top:20px;display:flex;align-items:flex-start;flex-direction:column;gap:16px}
   .insta-handle{display:inline-flex}
   .insta-grid{grid-template-columns:repeat(3,1fr);gap:3px}
-  /* films page mobile */
-  .films-list{padding:0 20px 95px;gap:50px}
-  .film-card.feature .film-card-video{aspect-ratio:16/9}
-  .youtube-play{width:52px;height:52px;font-size:14px}
-  .youtube-placeholder-copy span{display:none}
 }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -697,8 +633,8 @@ h1,h2,h3{text-wrap:balance}
 
 /* â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hero{background:var(--ink)}
-.hero-vid,.hero-image{filter:saturate(1.06) contrast(1.05) brightness(1.06)}
-.hero-video-overlay,.hero-image-wrap::after{
+.hero-image{filter:saturate(1.06) contrast(1.05) brightness(1.06)}
+.hero-image-wrap::after{
   background:
     linear-gradient(90deg,rgba(4,4,6,.74),rgba(4,4,6,.2) 44%,transparent 66%),
     linear-gradient(0deg,rgba(4,4,6,.8),rgba(4,4,6,.16) 40%,transparent 60%),
@@ -719,20 +655,11 @@ h1,h2,h3{text-wrap:balance}
 .hero-cta{border:1px solid var(--gold-soft);background:rgba(8,8,10,.42);backdrop-filter:blur(10px);
   color:var(--gold-hi);letter-spacing:.16em;transition:background .35s var(--ease),color .35s,border-color .35s,transform .35s}
 .hero-cta:hover{background:var(--gold);border-color:var(--gold);color:#0A0908;transform:translateY(-2px)}
-.hero-sound-toggle{min-height:41px;border:1px solid var(--line-strong);border-radius:100px;padding:0 18px;
-  background:rgba(8,8,10,.42);backdrop-filter:blur(10px);color:var(--bark);display:inline-flex;align-items:center;
-  gap:10px;cursor:pointer;transition:background .35s var(--ease),border-color .35s,color .35s,transform .35s}
-.hero-sound-toggle span{font-size:12px;color:var(--gold)}
-.hero-sound-toggle b{font:500 9px var(--mono);letter-spacing:.18em;text-transform:uppercase}
-.hero-sound-toggle:hover{border-color:var(--gold-soft);transform:translateY(-2px)}
-.hero-sound-toggle.active{background:rgba(201,169,97,.14);border-color:var(--gold-soft);color:var(--gold-hi)}
-.hero-sound-toggle.active span{color:var(--gold-hi)}
 
 /* â”€â”€ Section rhythm â€” one canvas, tonal lighting only â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .offerings,
 .selected-work,
 .statement-band,
-.film-teaser,
 .insta-section,
 #homeUploads,
 .uploaded-photo-section,
@@ -826,16 +753,7 @@ h1,h2,h3{text-wrap:balance}
 .statement-visual>p{color:var(--gold);opacity:.7;letter-spacing:.3em}
 
 /* â”€â”€ 04 Film â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-.film-teaser{background:var(--ink)}
-.film-teaser-video video,.film-teaser-image{filter:saturate(1) contrast(1.05) brightness(.86)}
-.film-teaser-overlay{background:
-  linear-gradient(90deg,rgba(5,5,6,.9),rgba(5,5,6,.4) 52%,rgba(5,5,6,.06) 80%)}
-.film-teaser-overlay .eyebrow{color:var(--gold)}
-.film-teaser-overlay h2{letter-spacing:-.03em}
 .text-link-light{color:var(--gold-hi);border-color:var(--gold-soft)}
-.films-list{background:var(--paper)}
-.film-card-info h2{letter-spacing:-.025em}
-.about-vid{filter:saturate(1.02) contrast(1.04) brightness(.9)}
 .note-card>img{filter:var(--grade-scrim)}
 .note-card:hover>img{filter:var(--grade-scrim-hover)}
 
@@ -854,14 +772,11 @@ h1,h2,h3{text-wrap:balance}
 .insta-section .text-link,.insta-section .big-link{color:var(--gold-hi);border-color:var(--gold-soft)}
 .insta-section .insta-header{border-color:var(--line)}
 .insta-section .insta-header h2{letter-spacing:-.03em}
-.insta-section .reel-sound-toggle{color:var(--bark);border-color:var(--line-strong);transition:all .3s}
-.insta-section .reel-sound-toggle:hover,.insta-section .reel-sound-toggle.active{
-  background:rgba(201,169,97,.14);border-color:var(--gold-soft);color:var(--gold-hi)}
 .insta-grid{gap:clamp(5px,.55vw,9px)}
 .insta-cell{background:var(--silk);overflow:hidden}
-.insta-cell img,.insta-cell video{transition:transform 1.2s var(--ease),filter .6s var(--ease);
+.insta-cell img{transition:transform 1.2s var(--ease),filter .6s var(--ease);
   filter:var(--grade)}
-.insta-cell:hover img,.insta-cell:hover video{transform:scale(1.06);filter:var(--grade-hover)}
+.insta-cell:hover img{transform:scale(1.06);filter:var(--grade-hover)}
 .insta-shimmer{background:linear-gradient(90deg,#0D0D10 25%,#1A1A1F 50%,#0D0D10 75%);background-size:200% 100%}
 
 /* â”€â”€ Interior pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -946,7 +861,7 @@ footer{background:var(--ink);color:var(--bark);border-color:var(--line)}
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   INTERIOR PAGES — Films, Studio, Enquiries
+   INTERIOR PAGES — Studio and Enquiries
    The flat-black problem is solved with elevation and light, not lighter
    backgrounds: panels are top-lit, edged with a champagne hairline, and lift
    on hover. Black stays black; the surfaces above it carry the richness.
@@ -963,27 +878,6 @@ footer{background:var(--ink);color:var(--bark);border-color:var(--line)}
   box-shadow:0 1px 0 rgba(243,238,230,.07) inset,0 34px 60px -32px rgba(0,0,0,.95)}
 
 .heading-note{font:500 9px var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
-
-/* ── Cinematic films hero ────────────────────────────────────────────────── */
-.cine-hero{position:relative;min-height:min(78vh,760px);display:flex;flex-direction:column;
-  justify-content:flex-end;overflow:hidden;background:var(--ink);padding:0 var(--gutter) 0}
-.cine-hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  filter:saturate(1) contrast(1.05) brightness(.7)}
-.cine-hero-scrim{position:absolute;inset:0;background:
-  linear-gradient(0deg,rgba(5,5,6,.96) 4%,rgba(5,5,6,.45) 46%,rgba(5,5,6,.55) 100%),
-  linear-gradient(90deg,rgba(5,5,6,.7),transparent 62%)}
-.cine-hero-copy{position:relative;z-index:2;padding-bottom:44px;max-width:900px}
-.cine-hero-copy h1{font:400 clamp(46px,6.6vw,110px)/.9 var(--serif);letter-spacing:-.035em;margin:20px 0 0}
-.cine-hero-copy h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
-.cine-hero-sub{max-width:560px;margin:26px 0 0;font:300 16px/1.8 var(--sans);color:rgba(243,238,230,.72)}
-.cine-hero-meta{position:relative;z-index:2;display:flex;gap:clamp(28px,5vw,88px);flex-wrap:wrap;
-  padding:26px 0 34px;border-top:1px solid var(--line)}
-.cine-hero-meta b{display:block;font:400 clamp(26px,2.6vw,40px)/1 var(--serif);color:var(--gold-hi)}
-.cine-hero-meta span{display:block;margin-top:9px;font:500 8px var(--mono);letter-spacing:.24em;color:var(--muted)}
-
-.films-list{padding:var(--section-y) var(--gutter) 0}
-.film-card-info{padding-top:26px;border-top:1px solid var(--line);margin-top:20px}
-.film-card-video{border-radius:3px;overflow:hidden;border:1px solid var(--line)}
 
 /* ── Process ─────────────────────────────────────────────────────────────── */
 .process,.spec,.coverage,.promise,.faq{padding:var(--section-y) var(--gutter);background:var(--paper)}
@@ -1052,10 +946,6 @@ footer{background:var(--ink);color:var(--bark);border-color:var(--line)}
 .cta-secondary:hover{border-color:var(--gold-soft);color:var(--gold-hi);transform:translateY(-3px)}
 
 /* ── Interior page tone corrections ──────────────────────────────────────── */
-.about-video-hero{background:var(--ink)}
-.about-vid-overlay{background:
-  linear-gradient(0deg,rgba(5,5,6,.92) 2%,rgba(5,5,6,.28) 52%,transparent 78%),
-  linear-gradient(90deg,rgba(5,5,6,.6),transparent 60%)}
 .about-portrait{padding:var(--section-y) var(--gutter)}
 .about-portrait>div{height:clamp(360px,44vw,600px)}
 .about-brand-card{background:linear-gradient(168deg,#17161C,#0B0B0E);border:1px solid var(--line)}
@@ -1064,14 +954,11 @@ footer{background:var(--ink);color:var(--bark);border-color:var(--line)}
 .philosophy li span{color:var(--gold);opacity:.8}
 .ritual-context{padding:var(--section-y) var(--gutter);background:var(--silk)}
 .ritual-terms span{color:var(--gold-hi);opacity:.85}
-.film-sub{color:var(--muted);letter-spacing:.2em}
 
 @media(max-width:860px){
   .cta-band{grid-template-columns:1fr;align-items:start}
 }
 @media(max-width:700px){
-  .cine-hero{min-height:70vh}
-  .cine-hero-meta{gap:24px;padding-bottom:26px}
   .about-portrait{grid-template-columns:1fr;gap:38px}
   .philosophy,.ritual-context{grid-template-columns:1fr;gap:28px}
   .contact-choice>div,.contact-layout{grid-template-columns:1fr;gap:34px}
@@ -1172,8 +1059,8 @@ p,li,.split-hero-sub,.enq-hero-sub,.process-list p,.spec-grid p,.promise-grid p,
 .ritual-context>div:first-child>p:last-child{font-weight:400}
 
 /* Mono eyebrows and micro-labels were the dullest elements on the page. */
-.eyebrow,.heading-note,.cine-hero-meta span,.enq-hero-meta span,.stat-band span,
-.film-sub,.uploaded-photo-grid figcaption,.project-location,
+.eyebrow,.heading-note,.enq-hero-meta span,.stat-band span,
+.uploaded-photo-grid figcaption,.project-location,
 .selected-work .project-location{color:#CFC7BC}
 .eyebrow{opacity:1}
 
@@ -1220,7 +1107,6 @@ label{color:#C4BCB1}
 .social-rail .dock-chat svg{width:22px;height:22px;padding:0;border:0;border-radius:0;fill:#25D366;stroke:none}
 .social-rail .dock-chat:hover svg{fill:#fff}
 .social-rail svg{width:21px;height:21px}
-.social-rail .dock-icons .youtube svg{width:23px;height:23px}
 
 @media (max-width:760px){
   .social-rail{gap:10px;right:16px;bottom:16px}
@@ -1228,38 +1114,29 @@ label{color:#C4BCB1}
   .social-rail .dock-icons{gap:10px}
 }
 
-/* ═══ STUDIO HERO — split: portrait reel left, copy right ═══ */
-/* About.mp4 is 478×850 (9:16). A single cover-fit crop lost ~68% of the frame.
-   Now a full-bleed bed cropped to the faces (skin-tone sampling puts them at
-   ~20% from the top) with the complete reel framed beside the copy. */
-.about-video-hero{position:relative;display:block;height:auto;min-height:0;
+/* STUDIO HERO */
+.about-photo-hero{position:relative;display:block;height:auto;min-height:0;
   padding:calc(var(--section-y)*.9) var(--gutter) calc(var(--section-y)*.8);
-  overflow:hidden;isolation:isolate}
-
-.about-vid-bed{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  object-position:center 20%;filter:blur(4px) saturate(.9) contrast(1.05) brightness(.38);
-  transform:scale(1.09);pointer-events:none;z-index:0}
-.about-vid-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;background:
-  linear-gradient(90deg,rgba(8,8,10,.72) 0%,rgba(8,8,10,.86) 46%,rgba(8,8,10,.94) 100%),
-  linear-gradient(0deg,rgba(8,8,10,.96) 0%,transparent 46%)}
+  overflow:hidden;background:
+  radial-gradient(55% 62% at 12% 20%,rgba(201,169,97,.1),transparent 72%),
+  linear-gradient(145deg,#0d0c10,#08080a)}
 
 .about-hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;
   display:grid;grid-template-columns:minmax(300px,.86fr) minmax(0,1.14fr);
   gap:clamp(36px,5vw,84px);align-items:center}
 
-/* The framed reel — full 9:16 frame, nothing cropped. */
-.about-vid-frame{position:relative;aspect-ratio:9/16;width:100%;max-width:400px;
+.about-photo-frame{position:relative;aspect-ratio:4/5;width:100%;max-width:470px;
   justify-self:end;border-radius:3px;overflow:hidden;
   border:1px solid rgba(251,248,242,.16);
   box-shadow:0 50px 120px rgba(0,0,0,.72),0 0 0 1px rgba(201,169,97,.18),
              inset 0 1px 0 rgba(251,248,242,.14)}
-.about-vid-frame::after{content:"";position:absolute;inset:0;pointer-events:none;
+.about-photo-frame::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(0deg,rgba(8,8,10,.42) 0%,transparent 38%)}
-.about-vid{position:relative;width:100%;height:100%;object-fit:cover;object-position:center 26%;
+.about-photo-frame img{position:relative;width:100%;height:100%;object-fit:cover;object-position:center;
   filter:saturate(1.05) contrast(1.04) brightness(1.03)}
 
-.about-vid-text{position:static;text-align:left;max-width:34rem}
-.about-vid-text h1{margin:20px 0 0;max-width:none;font-size:clamp(38px,4.3vw,70px);line-height:.94}
+.about-photo-text{position:static;text-align:left;max-width:34rem}
+.about-photo-text h1{margin:20px 0 0;max-width:none;font-size:clamp(38px,4.3vw,70px);line-height:.94}
 .about-hero-lede{margin:26px 0 0;max-width:31rem;font:400 16px/1.85 var(--sans);color:var(--muted)}
 .about-hero-meta{display:flex;flex-wrap:wrap;gap:14px 44px;margin:34px 0 0;
   padding-top:26px;border-top:1px solid var(--line)}
@@ -1276,10 +1153,8 @@ label{color:#C4BCB1}
 
 @media (max-width:960px){
   .about-hero-inner{grid-template-columns:1fr;gap:38px;justify-items:center}
-  .about-vid-frame{justify-self:center;max-width:min(70vw,320px)}
-  .about-vid-text{text-align:center;max-width:36rem}
+  .about-photo-frame{justify-self:center;max-width:min(82vw,420px)}
+  .about-photo-text{text-align:center;max-width:36rem}
   .about-hero-lede{margin-inline:auto}
   .about-hero-meta{justify-content:center;text-align:center}
-  .about-vid-overlay{background:
-    linear-gradient(0deg,rgba(8,8,10,.95) 0%,rgba(8,8,10,.8) 50%,rgba(8,8,10,.72) 100%)}
 }

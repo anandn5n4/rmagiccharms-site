@@ -1,19 +1,13 @@
 // ============================================================================
 // R MAGIC CHARMS — WEBSITE CONTENT
-// This is the only file you need to edit when adding couples or YouTube films.
+// This is the only file you need to edit when adding couples and photographs.
 //
 // COUPLE PHOTOS
 // 1. Create: resources/couples/couple-name/
 // 2. Copy that couple's JPG, JPEG, PNG, or WEBP files into the folder.
 // 3. Copy a COUPLE STORIES block below and update its text and photo paths.
 //
-// YOUTUBE FILMS
-// Upload finished films to the official YouTube channel, then paste each
-// video's ID into the WEDDING FILMS list below. Until then, the cards display
-// a deliberate "coming soon" state instead of hosting large files here.
-//
 // Photo sizes: "large" = full width, "medium" = offset, "duo" = paired.
-// Film sizes: "feature" = wide film, "reel" = shorter portrait film.
 // ============================================================================
 
 const MEDIA = {
@@ -25,11 +19,10 @@ const MEDIA = {
   westernGhats: "resources/editorial/western-ghats.jpg",
   mysuruPalace: "resources/editorial/mysuru-palace.jpg",
   hampiTemple: "resources/editorial/hampi-temple.jpg",
-  heroLoop: "resources/web/hero-loop.mp4",
-  instagram1: "https://s10.imginn.com/606011278_17900956011347286_2198961011597185709_n.jpg",
-  instagram2: "https://s10.imginn.com/642432717_17909723286347286_3474546402585949577_n.jpg",
-  instagram3: "https://s10.imginn.com/749419601_17932276722347286_8508349124287960314_n.jpg",
-  instagram4: "https://s10.imginn.com/723126611_17926206489347286_8351562861960163135_n.jpg",
+  instagram1: "resources/uploads/portfolio/couple-market-moment.jpg",
+  instagram2: "resources/uploads/portfolio/groom-urban-portrait.jpg",
+  instagram3: "resources/uploads/portfolio/intimate-couple-portrait.jpg",
+  instagram4: "resources/uploads/portfolio/wedding-blessing-ritual.jpg",
 };
 
 window.RMAGIC_CONTENT = {
@@ -42,9 +35,6 @@ window.RMAGIC_CONTENT = {
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Karnataka%2C%20India",
     // Add verified public details here when available. Empty values stay hidden.
     email: "",
-    // Add the official channel URL after it is created. Empty keeps the icon
-    // linked to the Films page without sending visitors to a search result.
-    youtube: "",
   },
 
   // ── COUPLE STORIES ────────────────────────────────────────────────────────
@@ -52,7 +42,7 @@ window.RMAGIC_CONTENT = {
     {
       slug: "kavya-and-yathish",
       title: "Kavya & Yathish",
-      type: "PRE-WEDDING FILM",
+      type: "PRE-WEDDING",
       filter: "pre-wedding",
       location: "Gopalaswami Hills, Karnataka",
       year: "2024",
@@ -133,28 +123,6 @@ window.RMAGIC_CONTENT = {
       image: MEDIA.local1,
       className: "square",
       photos: [{ src: MEDIA.local1, alt: "Meghna and Aditya at their sangeet", size: "large" }],
-    },
-  ],
-
-  // ── WEDDING FILMS ─────────────────────────────────────────────────────────
-  films: [
-    {
-      youtubeId: "",
-      poster: MEDIA.local4,
-      title: "Ayyo Shivaney",
-      subtitle: "THE FILM",
-      type: "WEDDING FILM",
-      year: "2024",
-      size: "feature",
-    },
-    {
-      youtubeId: "",
-      poster: MEDIA.local1,
-      title: "Kavya & Yathish",
-      subtitle: "GOPALASWAMI HILLS",
-      type: "PRE-WEDDING FILM",
-      year: "2024",
-      size: "feature",
     },
   ],
 };
