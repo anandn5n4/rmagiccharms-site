@@ -196,17 +196,22 @@ button,input,select,textarea{font:inherit}
 /* â”€â”€ FILMS PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .films-list{padding:0 3.1vw 160px;display:grid;gap:80px}
 .film-card.feature .film-card-video{width:100%;aspect-ratio:16/9;background:#0d0a06;overflow:hidden}
-.film-card.feature .film-card-video video{width:100%;height:100%;display:block;object-fit:cover}
+.film-card.feature .film-card-video iframe{width:100%;height:100%;display:block;border:0}
 .film-card-info{padding:22px 0 0}
 .film-card-info h2{font:400 clamp(38px,4.5vw,72px)/.94 var(--serif);letter-spacing:-.02em;margin:8px 0 6px}
 .film-sub{font:11px var(--mono);letter-spacing:.08em;color:var(--muted);margin:0}
-.films-loading{padding:30px 0;border-top:1px solid var(--line);color:var(--muted);font:10px var(--mono);letter-spacing:.06em}
-.auto-film-showcase{padding:110px 3.1vw 120px;background:var(--silk)}
-.auto-film-showcase[hidden]{display:none}
-.uploaded-film-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5vw}
-.uploaded-film-grid .film-card-video{aspect-ratio:16/9;background:#0d0a06}
-.uploaded-film-grid video{display:block;width:100%;height:100%;object-fit:cover}
-.uploaded-film-grid .film-card-info h2{font-size:clamp(32px,3.2vw,54px)}
+.youtube-placeholder{position:relative;width:100%;height:100%;overflow:hidden;background:#0d0a06}
+.youtube-placeholder img{display:block;width:100%;height:100%;object-fit:cover;filter:var(--grade)}
+.youtube-placeholder-scrim{position:absolute;inset:0;background:
+  linear-gradient(0deg,rgba(5,5,7,.94),rgba(5,5,7,.1) 68%),
+  radial-gradient(circle at 50% 45%,transparent,rgba(5,5,7,.38))}
+.youtube-play{position:absolute;left:50%;top:45%;translate:-50% -50%;display:grid;place-items:center;
+  width:68px;height:68px;border:1px solid rgba(255,255,255,.42);border-radius:50%;
+  color:#fff;background:rgba(8,8,10,.38);backdrop-filter:blur(9px);font-size:18px;padding-left:4px}
+.youtube-placeholder-copy{position:absolute;left:clamp(20px,3vw,48px);right:clamp(20px,3vw,48px);
+  bottom:clamp(20px,3vw,42px);display:flex;justify-content:space-between;align-items:end;gap:24px}
+.youtube-placeholder-copy b{font:500 10px var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-hi)}
+.youtube-placeholder-copy span{max-width:340px;text-align:right;font:400 12px/1.6 var(--sans);color:var(--muted)}
 
 /* featured project */
 .featured-project{height:min(67vw,850px);position:relative;overflow:hidden;background:#c4a882}
@@ -594,8 +599,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   /* films page mobile */
   .films-list{padding:0 20px 95px;gap:50px}
   .film-card.feature .film-card-video{aspect-ratio:16/9}
-  .auto-film-showcase{padding:75px 20px 90px}
-  .uploaded-film-grid{grid-template-columns:1fr;gap:45px}
+  .youtube-play{width:52px;height:52px;font-size:14px}
+  .youtube-placeholder-copy span{display:none}
 }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -729,7 +734,6 @@ h1,h2,h3{text-wrap:balance}
 .statement-band,
 .film-teaser,
 .insta-section,
-.auto-film-showcase,
 #homeUploads,
 .uploaded-photo-section,
 .uploaded-photo-about,
@@ -829,7 +833,6 @@ h1,h2,h3{text-wrap:balance}
 .film-teaser-overlay .eyebrow{color:var(--gold)}
 .film-teaser-overlay h2{letter-spacing:-.03em}
 .text-link-light{color:var(--gold-hi);border-color:var(--gold-soft)}
-.auto-film-showcase{background:var(--silk)}
 .films-list{background:var(--paper)}
 .film-card-info h2{letter-spacing:-.025em}
 .about-vid{filter:saturate(1.02) contrast(1.04) brightness(.9)}
@@ -1061,7 +1064,6 @@ footer{background:var(--ink);color:var(--bark);border-color:var(--line)}
 .philosophy li span{color:var(--gold);opacity:.8}
 .ritual-context{padding:var(--section-y) var(--gutter);background:var(--silk)}
 .ritual-terms span{color:var(--gold-hi);opacity:.85}
-.films-loading{border-color:var(--line);color:var(--muted)}
 .film-sub{color:var(--muted);letter-spacing:.2em}
 
 @media(max-width:860px){

@@ -21,8 +21,6 @@ class RMagicHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.startswith("/api/images"):
             self._list_uploaded_images()
-        elif self.path.startswith("/api/videos"):
-            self._list_uploaded_videos()
         elif self.path.startswith("/api/profile"):
             self._proxy_profile()
         elif self.path.startswith("/api/insta"):
@@ -73,33 +71,6 @@ class RMagicHandler(http.server.SimpleHTTPRequestHandler):
             })
         images.sort(key=lambda item: item["modified"], reverse=True)
         payload = json.dumps({"section": section, "images": images}).encode()
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(payload)))
-        self.send_header("Cache-Control", "no-store")
-        self.end_headers()
-        self.wfile.write(payload)
-
-    def _list_uploaded_videos(self):
-        video_dir = os.path.join(os.getcwd(), "resources", "videos")
-        os.makedirs(video_dir, exist_ok=True)
-        videos = []
-        for name in sorted(os.listdir(video_dir), key=str.lower):
-            path = os.path.join(video_dir, name)
-            if not os.path.isfile(path) or not name.lower().endswith(VIDEO_EXTS):
-                continue
-            title = os.path.splitext(name)[0].replace("_", " ").replace("-", " ")
-            title = re.sub(r"\s+", " ", title).strip().title()
-            videos.append({
-                "src": "/resources/videos/" + urllib.parse.quote(name),
-                "title": title,
-                "subtitle": "NEWLY ADDED FILM",
-                "type": "WEDDING FILM",
-                "year": "",
-                "size": "feature",
-                "bytes": os.path.getsize(path),
-            })
-        payload = json.dumps({"videos": videos}).encode()
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(payload)))

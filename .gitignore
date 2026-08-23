@@ -11,12 +11,13 @@ __pycache__/
 Thumbs.db
 .vscode/
 
-# High-resolution source media. Cloudflare Pages allows at most 25 MiB per
-# static asset; deployable editions belong in resources/web/.
-resources/Ayyo shivaney.mp4
-resources/Kavya & yathish pre wed Gopalaswami hills-.mp4
-resources/Kavya & yathish pre wed Gopalaswami hills-1.mp4
-resources/ambient.mpeg
+# Source media stays local. Only the small Studio reel and source-quality
+# homepage loop are deployed; complete films belong on YouTube.
+resources/*.mp4
+resources/*.mpeg
+!resources/About.mp4
+resources/web/*
+!resources/web/hero-loop.mp4
 
 # Additional source masters
 resources/source/

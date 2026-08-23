@@ -1,17 +1,16 @@
 // ============================================================================
 // R MAGIC CHARMS — WEBSITE CONTENT
-// This is the only file you need to edit when adding couples or films.
+// This is the only file you need to edit when adding couples or YouTube films.
 //
 // COUPLE PHOTOS
 // 1. Create: resources/couples/couple-name/
 // 2. Copy that couple's JPG, JPEG, PNG, or WEBP files into the folder.
 // 3. Copy a COUPLE STORIES block below and update its text and photo paths.
 //
-// VIDEOS
-// Copy MP4 files into resources/videos/. They are discovered automatically
-// and appear on both the home page and Films page after a refresh.
-// The WEDDING FILMS list below is only for permanently featured films that
-// need custom titles, posters, types, or years.
+// YOUTUBE FILMS
+// Upload finished films to the official YouTube channel, then paste each
+// video's ID into the WEDDING FILMS list below. Until then, the cards display
+// a deliberate "coming soon" state instead of hosting large files here.
 //
 // Photo sizes: "large" = full width, "medium" = offset, "duo" = paired.
 // Film sizes: "feature" = wide film, "reel" = shorter portrait film.
@@ -26,6 +25,7 @@ const MEDIA = {
   westernGhats: "resources/editorial/western-ghats.jpg",
   mysuruPalace: "resources/editorial/mysuru-palace.jpg",
   hampiTemple: "resources/editorial/hampi-temple.jpg",
+  heroLoop: "resources/web/hero-loop.mp4",
   instagram1: "https://s10.imginn.com/606011278_17900956011347286_2198961011597185709_n.jpg",
   instagram2: "https://s10.imginn.com/642432717_17909723286347286_3474546402585949577_n.jpg",
   instagram3: "https://s10.imginn.com/749419601_17932276722347286_8508349124287960314_n.jpg",
@@ -42,8 +42,9 @@ window.RMAGIC_CONTENT = {
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Karnataka%2C%20India",
     // Add verified public details here when available. Empty values stay hidden.
     email: "",
-    // Replace this search URL with the official channel URL when available.
-    youtube: "https://www.youtube.com/results?search_query=R%20Magic%20Charms",
+    // Add the official channel URL after it is created. Empty keeps the icon
+    // linked to the Films page without sending visitors to a search result.
+    youtube: "",
   },
 
   // ── COUPLE STORIES ────────────────────────────────────────────────────────
@@ -138,7 +139,7 @@ window.RMAGIC_CONTENT = {
   // ── WEDDING FILMS ─────────────────────────────────────────────────────────
   films: [
     {
-      src: "resources/web/ayyo-shivaney.mp4",
+      youtubeId: "",
       poster: MEDIA.local4,
       title: "Ayyo Shivaney",
       subtitle: "THE FILM",
@@ -147,7 +148,7 @@ window.RMAGIC_CONTENT = {
       size: "feature",
     },
     {
-      src: "resources/web/kavya-yathish-gopalaswami-hills.mp4",
+      youtubeId: "",
       poster: MEDIA.local1,
       title: "Kavya & Yathish",
       subtitle: "GOPALASWAMI HILLS",

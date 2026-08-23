@@ -61,12 +61,12 @@ function renderSocialRail() {
     whatsapp: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 12.1 0C5.6 0 .3 5.3.3 11.8c0 2.1.5 4.1 1.6 5.9L.2 24l6.5-1.7a11.8 11.8 0 0 0 5.6 1.4c6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.3-6.1-3.6-8.4Zm-8.3 18.2c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.8 1 1-3.7-.2-.4a9.7 9.7 0 1 1 8.5 4.7Zm5.3-7.3c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-1 1.1-.2.2-.4.2-.7.1-1.8-.9-3-1.6-4.2-3.7-.3-.6.3-.5.9-1.8.1-.2 0-.4 0-.6l-.9-2.1c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.4-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.1.2 2.4 3.7 5.9 5.2 2.2.9 3.1 1 4.2.8.7-.1 2.1-.9 2.4-1.7.3-.8.3-1.5.2-1.7-.1-.1-.4-.2-.7-.3Z"/></svg>`,
   };
   const links = [
-    [`https://www.instagram.com/${brand.instagram}`, icons.instagram, "Instagram", "instagram"],
-    [brand.youtube, icons.youtube, "YouTube", "youtube"],
+    { href: `https://www.instagram.com/${brand.instagram}`, icon: icons.instagram, name: "Instagram", className: "instagram", external: true },
+    { href: brand.youtube || "#films", icon: icons.youtube, name: brand.youtube ? "YouTube" : "YouTube channel coming soon", className: "youtube", external: Boolean(brand.youtube) },
   ];
   rail.innerHTML = `
     <a class="dock-chat" href="https://wa.me/${brand.phoneDigits}?text=${encodeURIComponent("Namaste R Magic Charms, we are planning our wedding and would like to discuss photography and films.")}" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">${icons.whatsapp}<b>Chat</b></a>
-    <div class="dock-icons">${links.map(([href, icon, name, className]) => `<a class="${className}" href="${href}" target="_blank" rel="noreferrer" aria-label="${name}" title="${name}">${icon}</a>`).join("")}</div>`;
+    <div class="dock-icons">${links.map(({ href, icon, name, className, external }) => `<a class="${className}" href="${href}"${external ? ' target="_blank" rel="noreferrer"' : ""} aria-label="${name}" title="${name}">${icon}</a>`).join("")}</div>`;
 }
 
 function toggleMenu() {
@@ -284,7 +284,7 @@ function home() {
       <div class="hero-video-wrap">
         <video class="hero-vid" autoplay muted loop playsinline preload="metadata"
                poster="${projects[0].image}">
-          <source src="${filmList[1].src}" type="video/mp4">
+          <source src="${MEDIA.heroLoop}" type="video/mp4">
           <img src="${projects[0].image}" alt="R Magic Charms wedding film" />
         </video>
         <div class="hero-video-overlay"></div>
@@ -404,8 +404,6 @@ function home() {
         </div>
       </div>
     </section>
-    <section class="auto-film-showcase" id="homeUploadedFilms" hidden></section>
-
     <!-- INSTAGRAM GRID -->
     <section class="insta-section">
       <div class="insta-header">
@@ -603,10 +601,9 @@ function films() {
     <section class="films-list" id="filmsList">
       <div class="section-heading">
         <p class="eyebrow">01 / THE FILM ARCHIVE</p>
-        <span class="heading-note">Press play — sound on</span>
+        <span class="heading-note">YouTube premieres coming soon</span>
       </div>
       ${filmList.map(filmCardMarkup).join("")}
-      <div class="films-loading" id="filmsLoading">Checking for newly uploaded films…</div>
     </section>
 
     <section class="process">
@@ -654,12 +651,24 @@ function ctaBand(title, copy) {
 function filmCardMarkup(film) {
   const year = film.year ? ` · ${film.year}` : "";
   const poster = film.poster || projects[0].image;
+  const player = film.youtubeId
+    ? `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(film.youtubeId)}"
+         title="${film.title}" loading="lazy"
+         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+    : `<div class="youtube-placeholder">
+         ${image(poster, `${film.title} wedding film`)}
+         <div class="youtube-placeholder-scrim"></div>
+         <span class="youtube-play" aria-hidden="true">▶</span>
+         <div class="youtube-placeholder-copy">
+           <b>Coming soon on YouTube</b>
+           <span>Full films will premiere here after our channel launches.</span>
+         </div>
+       </div>`;
   return `
-    <article class="film-card reveal ${film.size || "feature"}" data-film-src="${film.src}">
+    <article class="film-card reveal ${film.size || "feature"}">
       <div class="film-card-video">
-        <video controls preload="metadata" poster="${poster}">
-          <source src="${film.src}" type="video/mp4">
-        </video>
+        ${player}
       </div>
       <div class="film-card-info">
         <p class="eyebrow">${film.type || "WEDDING FILM"}${year}</p>
@@ -667,37 +676,6 @@ function filmCardMarkup(film) {
         <p class="film-sub">${film.subtitle || "R MAGIC CHARMS"}</p>
       </div>
     </article>`;
-}
-
-async function populateUploadedFilms(page) {
-  try {
-    const response = await fetch("/api/videos", { cache: "no-store" });
-    if (!response.ok) throw new Error("Unable to scan uploaded videos");
-    const { videos = [] } = await response.json();
-
-    if (page === "films") {
-      const list = document.getElementById("filmsList");
-      const loading = document.getElementById("filmsLoading");
-      loading?.remove();
-      if (!list || !videos.length) return;
-      const known = new Set([...list.querySelectorAll("[data-film-src]")].map(card => decodeURIComponent(card.dataset.filmSrc).toLowerCase()));
-      const additions = videos.filter(video => !known.has(decodeURIComponent(video.src).toLowerCase()));
-      list.insertAdjacentHTML("beforeend", additions.map(filmCardMarkup).join(""));
-      observeReveals();
-    }
-
-    if (page === "home" && videos.length) {
-      const showcase = document.getElementById("homeUploadedFilms");
-      if (!showcase) return;
-      showcase.hidden = false;
-      showcase.innerHTML = `
-        <div class="section-heading"><p class="eyebrow">NEWLY ADDED FILMS</p>${link("films", "View every film <span>↗</span>", "text-link")}</div>
-        <div class="uploaded-film-grid">${videos.slice(0, 2).map(filmCardMarkup).join("")}</div>`;
-      observeReveals();
-    }
-  } catch {
-    document.getElementById("filmsLoading")?.remove();
-  }
 }
 
 async function populateUploadedImages(page) {
@@ -800,7 +778,6 @@ function render() {
   bindFilters();
   if (page === "home") bindHeroSound();
   if (page === "home") populateInstaGrid();
-  if (page === "home" || page === "films") populateUploadedFilms(page);
   if (page === "about") syncAboutHero();
   if (["home", "about", "contact", "work"].includes(page)) populateUploadedImages(page);
 }

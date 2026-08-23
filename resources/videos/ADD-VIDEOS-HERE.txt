@@ -1,9 +1,0 @@
-Place new MP4 wedding films and reels in this folder.
-
-Refresh the website. The video is automatically shown on the home page and
-Films page. No code change is required.
-
-The filename becomes the title, so use a readable name such as:
-Anita and Arun Wedding Film.mp4
-
-Full instructions: C:\Personal\saanjh-studio\HOW-TO-ADD-MEDIA.txt
