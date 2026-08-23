@@ -1,2 +1,0 @@
-Copy images for the automatic Home gallery into this folder, then refresh.
-Full instructions: ..\README.txt

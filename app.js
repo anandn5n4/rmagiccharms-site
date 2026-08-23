@@ -1,16 +1,47 @@
 const content = window.RMAGIC_CONTENT;
 const brand = content.brand;
-const projects = content.couples;
+
+// Everything visual is described by resources/media.json, generated from
+// media-src/ by tools/build_media.py and shipped as media.js. Nothing is
+// discovered at runtime, so the site behaves identically on localhost and on
+// the static host.
+const MEDIA_DATA = window.RMAGIC_MEDIA || { albums: [], site: {}, video: {} };
+
+const siteGroup = name => MEDIA_DATA.site[name] || [];
+const sitePhoto = (group, id) => siteGroup(group).find(p => p.id === id) || siteGroup(group)[0] || null;
+const HERO_LOOP = MEDIA_DATA.video["hero-loop"] || "";
+const albumBySlug = slug => MEDIA_DATA.albums.find(album => album.slug === slug);
+const signatureFrames = albumBySlug("signature-frames")?.photos || [];
+const signature = id => signatureFrames.find(p => p.id === id) || signatureFrames[0] || null;
+
+// Pinned by media-src/site.json. The pipeline writes the matching
+// <link rel=preload> into index.html so the two can never drift apart.
+const HERO_POSTER = MEDIA_DATA.heroPoster || signature("together-in-the-hills");
+
+// The cover's real aspect ratio drives the archive layout, so the grid follows
+// the photographs instead of a hand-maintained className.
+const shapeOf = photo =>
+  !photo ? "square" : photo.ratio > 1.2 ? "wide" : photo.ratio < 0.85 ? "portrait" : "square";
+
+const projects = MEDIA_DATA.albums
+  .filter(album => album.listed !== false && album.photos.length)
+  .map(album => ({
+    ...album,
+    type: (album.ceremony || "Wedding").toUpperCase(),
+    image: album.cover,
+    className: shapeOf(album.cover),
+  }));
+
 const IG = {
-  p1: MEDIA.instagram1,
-  p2: MEDIA.instagram2,
-  p3: MEDIA.instagram3,
-  p4: MEDIA.instagram4,
-  r1: MEDIA.local1,
-  r2: MEDIA.local2,
-  r3: MEDIA.local3,
-  r4: MEDIA.local4,
-  r5: MEDIA.local5,
+  p1: sitePhoto("portfolio", "couple-market-moment"),
+  p2: sitePhoto("portfolio", "groom-urban-portrait"),
+  p3: sitePhoto("portfolio", "intimate-couple-portrait"),
+  p4: sitePhoto("portfolio", "wedding-blessing-ritual"),
+  r1: signature("hills-embrace"),
+  r2: signature("together-in-the-hills"),
+  r3: signature("pre-wedding-portrait"),
+  r4: signature("two-lives-become-one"),
+  r5: signature("rituals-and-details"),
 };
 
 const app = document.querySelector("#app");
@@ -21,14 +52,32 @@ function link(to, label, className = "") {
   return `<a href="#${to}" class="${className}">${label}</a>`;
 }
 
-function image(src, alt, className = "") {
+function srcsetFor(photo) {
+  return photo.widths.map(w => `${photo.base}-${w}.webp ${w}w`).join(", ");
+}
+
+// Pick a concrete file. Callers pass the width they expect to render at; the
+// closest published width that can fill it is used as the src fallback.
+function photoSrc(photo, width) {
+  const widths = photo.widths;
+  const pick = width ? widths.find(w => w >= width) || widths[widths.length - 1]
+                     : widths[widths.length - 1];
+  return `${photo.base}-${pick}.webp`;
+}
+
+// `sizes` tells the browser how wide the image will actually be rendered, which
+// is what lets a phone download the 400px file instead of the desktop one.
+function image(photo, alt, className = "", sizes = "(max-width: 720px) 100vw, (max-width: 1200px) 60vw, 45vw") {
+  if (!photo) return "";
   const eager = className.includes("eager");
-  return `<img class="${className}" src="${src}" alt="${alt}" loading="${eager ? "eager" : "lazy"}" decoding="async"${eager ? ' fetchpriority="high"' : ""} />`;
+  return `<img class="${className}" src="${photoSrc(photo)}" srcset="${srcsetFor(photo)}" sizes="${sizes}"
+    width="${photo.w}" height="${photo.h}" style="--tint:${photo.tint}"
+    alt="${alt || photo.alt || ""}" loading="${eager ? "eager" : "lazy"}" decoding="async"${eager ? ' fetchpriority="high"' : ""} />`;
 }
 
 function renderHeader() {
   header.innerHTML = `
-    <a href="#home" class="wordmark" aria-label="R Magic Charms home"><img class="brand-mark" src="resources/r-magic-charms-mark.webp" alt="" /><span class="wordmark-text">R Magic Charms</span></a>
+    <a href="#home" class="wordmark" aria-label="R Magic Charms home"><img class="brand-mark" src="${photoSrc(sitePhoto("brand", "r-magic-charms-mark"), 400)}" alt="" /><span class="wordmark-text">R Magic Charms</span></a>
     <div class="header-right">
       <button class="menu-toggle" aria-expanded="false" aria-controls="primary-nav"><i></i><i></i><span>Menu</span></button>
       <nav id="primary-nav" aria-label="Main navigation">
@@ -44,7 +93,7 @@ function renderHeader() {
 function renderFooter() {
   footer.innerHTML = `
     <div class="footer-main">
-      <div class="footer-brand"><img src="resources/r-magic-charms-logo.webp" alt="R Magic Charms" /><p>South Indian wedding photography, rooted in Karnataka.</p></div>
+      <div class="footer-brand"><img src="${photoSrc(sitePhoto("brand", "r-magic-charms-logo"), 400)}" alt="R Magic Charms" /><p>South Indian wedding photography, rooted in Karnataka.</p></div>
       <div><p class="eyebrow">BASED IN</p><a href="${brand.mapUrl}" target="_blank" rel="noreferrer">${brand.location} ↗</a><p>Available across India and worldwide.</p></div>
       <div><p class="eyebrow">CONNECT</p><a href="tel:+${brand.phoneDigits}">${brand.phoneDisplay}</a><a href="https://www.instagram.com/${brand.instagram}" target="_blank" rel="noreferrer">@${brand.instagram}</a></div>
     </div>
@@ -79,7 +128,7 @@ function pageFrame(kicker, title, copy) {
 
 // Repository-hosted gallery: fast and reliable on static Cloudflare Pages.
 const INSTA_POSTS = [
-  { src: IG.r4, media: MEDIA.heroLoop, alt: "Wedding ceremony — two lives become one", code: "DSwbF95Eslh", isVideo: true },
+  { src: IG.r4, media: HERO_LOOP, alt: "Wedding ceremony — two lives become one", code: "DSwbF95Eslh", isVideo: true },
   { src: IG.r1, alt: "Pre-wedding portraits — Kavya & Yathish", code: "DVcqXhAE6Iw" },
   { src: IG.r3, alt: "Celebrating life's beautiful moments", code: "DVcqXhAE6Iw" },
   { src: IG.r2, alt: "Candid wedding moments by @r_magic_charms", code: "DZfH9zHS-W6" },
@@ -88,7 +137,7 @@ const INSTA_POSTS = [
   { src: IG.r3, alt: "Jasmine and silk — wedding details", code: "DSwbF95Eslh" },
   { src: IG.r2, alt: "The laughter between the rituals", code: "DSwbF95Eslh" },
   { src: IG.r4, alt: "Golden hour portraits", code: "DSwbF95Eslh" },
-  { src: IG.p1, media: MEDIA.heroLoop, alt: "A recent celebration by R Magic Charms", code: "static-social-01", isVideo: true },
+  { src: IG.p1, media: HERO_LOOP, alt: "A recent celebration by R Magic Charms", code: "static-social-01", isVideo: true },
   { src: IG.p2, alt: "Newly shared wedding moments", code: "static-social-02" },
   { src: IG.p3, alt: "A story from our recent celebrations", code: "static-social-03" },
   { src: IG.p4, alt: "South Indian wedding moments by R Magic Charms", code: "static-social-04" },
@@ -119,8 +168,8 @@ function populateInstaGrid() {
     grid.insertAdjacentHTML("beforeend", additions.map((p, offset) => `
     <button type="button" class="insta-cell${p.isVideo ? " insta-video" : ""}" data-insta-index="${startIndex + offset}" aria-label="${p.isVideo ? "Play reel" : "View photo"}: ${p.alt}">
       ${p.isVideo
-        ? `<video class="insta-preview" muted loop playsinline preload="none" poster="${p.src}" data-src="${p.media}"></video>`
-        : `<img src="${p.src}" alt="${p.alt}" loading="lazy">`}
+        ? `<video class="insta-preview" muted loop playsinline preload="none" poster="${photoSrc(p.src, 400)}" data-src="${p.media}"></video>`
+        : image(p.src, p.alt, "", "(max-width: 720px) 45vw, 300px")}
       <span class="insta-hover"><b>${p.isVideo ? "▶ Hover to play" : "View moment"}</b><small>${p.isVideo ? "Pauses when you leave" : "Open on this website"}</small></span>
     </button>`).join(""));
     const cells = [...grid.querySelectorAll("[data-insta-index]")].slice(startIndex);
@@ -164,8 +213,8 @@ function openInstaViewer(post) {
     <button class="insta-viewer-close" type="button" aria-label="Close">×</button>
     <div class="insta-viewer-content">
       ${post.isVideo
-        ? `<video controls autoplay playsinline poster="${post.src}"><source src="${post.media}" type="video/mp4"></video>`
-        : `<img src="${post.src}" alt="${post.alt}">`}
+        ? `<video controls autoplay playsinline poster="${photoSrc(post.src, 900)}"><source src="${post.media}" type="video/mp4"></video>`
+        : `<img src="${photoSrc(post.src)}" srcset="${srcsetFor(post.src)}" sizes="90vw" alt="${post.alt}">`}
       <div class="insta-viewer-caption">
         <p>${post.alt}</p>
       </div>
@@ -186,7 +235,7 @@ function home() {
   return `
     <section class="hero hero-video">
       <div class="hero-video-wrap">
-        <video class="hero-vid" autoplay muted loop playsinline preload="none" poster="${projects[0].image}" data-src="${MEDIA.heroLoop}"></video>
+        <video class="hero-vid" autoplay muted loop playsinline preload="none" poster="${photoSrc(HERO_POSTER, 1600)}" data-src="${HERO_LOOP}"></video>
         <div class="hero-video-overlay"></div>
       </div>
       <!-- Animated circle badge (like WeddingBells) -->
@@ -220,37 +269,37 @@ function home() {
       </div>
       <div class="offerings-grid">
         <article class="offering-card offering-large">
-          ${image("resources/editorial/offerings/mehendi.webp", "Intricate bridal mehendi being applied")}
+          ${image(sitePhoto("offerings", "mehendi"), "Intricate bridal mehendi being applied")}
           <span class="offering-number">01</span><div><p>COLOUR · LAUGHTER · FAMILY</p><h3>Mehendi &amp; Haldi</h3><b>Explore coverage ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about Mehendi and Haldi coverage"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Indian_Folk_Mehndi_Ceremony_(3).jpg" target="_blank" rel="noreferrer">AmanAgrahari01 · CC BY-SA 4.0</a>
         </article>
         <article class="offering-card offering-prewed">
-          ${image("resources/editorial/offerings/pre-wedding.webp", "Pre-wedding portrait session by R Magic Charms")}
+          ${image(sitePhoto("offerings", "pre-wedding"), "Pre-wedding portrait session by R Magic Charms")}
           <span class="offering-number">02</span>
           <div><p>SAVE THE DATE · OUTDOOR · CINEMATIC</p><h3>Pre-Wedding Shoots</h3><b>Plan your shoot ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about pre-wedding photography"></a>
         </article>
         <article class="offering-card offering-reception">
-          ${image("resources/editorial/offerings/reception.webp", "Indian couple at their wedding reception")}
+          ${image(sitePhoto("offerings", "reception"), "Indian couple at their wedding reception")}
           <span class="offering-number">03</span><div><p>ELEGANCE · PORTRAITS · TOASTS</p><h3>Reception Stories</h3><b>Explore coverage ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about reception photography"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Indian_couple_at_wedding_reception.png" target="_blank" rel="noreferrer">Gargiekulkarni · CC BY-SA 4.0</a>
         </article>
         <article class="offering-card offering-couple">
-          ${image("resources/editorial/offerings/couple-shoot.webp", "Indian couple during a pre-wedding portrait session")}
+          ${image(sitePhoto("offerings", "couple-shoot"), "Indian couple during a pre-wedding portrait session")}
           <span class="offering-number">04</span><div><p>UNHURRIED · AFTER THE RUSH</p><h3>Post-Wedding Portraits</h3><b>Plan your session ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about post-wedding couple portraits"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Couple_Photoshoot_at_The_Lodhi_Garden.jpg" target="_blank" rel="noreferrer">Akarshan Sapra · CC BY-SA 4.0</a>
         </article>
         <article class="offering-card offering-drone">
-          ${image("resources/editorial/offerings/drone-venue.webp", "Aerial view of an Indian palace venue")}
+          ${image(sitePhoto("offerings", "drone-venue"), "Aerial view of an Indian palace venue")}
           <span class="offering-number">05</span><div><p>AERIAL PORTRAITS · GRAND PERSPECTIVES</p><h3>Drone Photography</h3><b>See the possibilities ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about drone wedding coverage"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Aerial_View_Umaid_Mahal_Jodhpur.jpg" target="_blank" rel="noreferrer">Daniel Romanson · CC0</a>
         </article>
         <article class="offering-card offering-complete">
-          ${image("resources/editorial/offerings/south-indian-wedding.webp", "Traditional South Indian wedding ceremony")}
+          ${image(sitePhoto("offerings", "south-indian-wedding"), "Traditional South Indian wedding ceremony")}
           <span class="offering-number">06</span><div><p>FROM NAANDI TO RECEPTION</p><h3>Complete Wedding Stories</h3><b>Build your collection ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about complete wedding coverage"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Traditional_South_Indian_Wedding_Ceremony.jpg" target="_blank" rel="noreferrer">Bhavya Bubbles · CC BY-SA 4.0</a>
@@ -317,59 +366,138 @@ function home() {
 }
 
 function projectCard(project) {
-  return `<article class="project-card ${project.className} reveal" data-category="${project.filter || "wedding-day"}">${image(project.image, project.title)}<div><p class="eyebrow">${project.type}</p><h3>${project.title}</h3><p class="project-location">${project.location} · ${project.year}</p></div>${link(`story/${project.slug}`, `Open ${project.title}`, "card-hit")}</article>`;
+  const count = project.photos.length;
+  return `<article class="project-card ${project.className} reveal" data-category="${project.filter || "all"}" style="--tint:${project.cover.tint}">
+    ${image(project.image, project.title, "", "(max-width: 720px) 92vw, (max-width: 1100px) 46vw, 32vw")}
+    <div>
+      <p class="eyebrow">${project.type}</p>
+      <h3>${project.title}</h3>
+      <p class="project-location">${project.location} · ${project.year}</p>
+      <p class="project-count">${count} ${count === 1 ? "frame" : "frames"}</p>
+    </div>
+    ${link(`story/${project.slug}`, `Open ${project.title}`, "card-hit")}
+  </article>`;
 }
+
+// Filters are derived from the albums that actually exist, so a ceremony only
+// appears once there is work to show behind it.
+const FILTER_LABELS = {
+  "pre-wedding": "Pre-wedding",
+  "nalangu-haldi": "Nalangu &amp; Haldi",
+  "muhurtham": "Muhurtham",
+  "sangeet-reception": "Sangeet &amp; Reception",
+};
 
 function work() {
+  const used = [...new Set(projects.map(p => p.filter))].filter(f => f && f !== "all");
+  const buttons = [`<button class="active" data-filter="all">All stories</button>`]
+    .concat(used.map(f => `<button data-filter="${f}">${FILTER_LABELS[f] || f.replace(/-/g, " ")}</button>`));
+
   return `${pageFrame("THE WEDDING ARCHIVE / 2019—NOW", "Tradition, joy and<br><em>blessed beginnings.</em>", "Nalangu laughter, turmeric in the morning sun, intricate mehendi, the sacred muhurtham and generations gathered in blessing. Every wedding is preserved as one complete family story.")}
-  <section class="filter-row" aria-label="Filter wedding stories"><button class="active" data-filter="all">All stories</button><button data-filter="pre-wedding">Pre-wedding</button><button data-filter="nalangu-haldi">Nalangu &amp; Haldi</button><button data-filter="muhurtham">Muhurtham</button><button data-filter="sangeet-reception">Sangeet &amp; Reception</button></section>
-  <section class="work-grid">${projects.map(projectCard).join("")}</section>
-  <section class="uploaded-photo-section" id="portfolioUploads" hidden></section>`;
+  <section class="filter-row" aria-label="Filter wedding stories">${buttons.join("")}</section>
+  <section class="work-grid">${projects.map(projectCard).join("")}</section>`;
 }
 
-// Renders gallery blocks from a project's photos[] array.
-// Consecutive "duo"-sized photos are automatically paired.
-function storyGallery(project) {
-  const photos = project.photos || [];
-  if (!photos.length) {
-    return `<figure class="story-large">${image(project.image, project.title)}</figure>`;
-  }
+// A justified gallery: every figure grows in proportion to the photograph's own
+// aspect ratio, so rows fill the width without any image being cropped or any
+// layout shifting once the files arrive.
+function storyGallery(album) {
+  const figures = album.photos.map((photo, index) => `
+    <figure style="--r:${photo.ratio}; --tint:${photo.tint}">
+      <button type="button" class="gallery-open" data-photo="${index}" aria-label="Open ${photo.alt}">
+        ${image(photo, photo.alt, "", "(max-width: 720px) 100vw, (max-width: 1200px) 60vw, 42vw")}
+      </button>
+      ${photo.caption ? `<figcaption>${photo.caption}</figcaption>` : ""}
+    </figure>`).join("");
 
-  const blocks = [];
-  let i = 0;
-  while (i < photos.length) {
-    const p = photos[i];
-    if (p.size === "duo" && photos[i + 1]?.size === "duo") {
-      blocks.push({ type: "duo", a: photos[i], b: photos[i + 1] });
-      i += 2;
-    } else {
-      blocks.push({ type: p.size || "large", photo: p });
-      i++;
-    }
-  }
-
-  return blocks.map(block => {
-    if (block.type === "duo") {
-      return `<div class="story-duo"><figure>${image(block.a.src, block.a.alt)}</figure><figure>${image(block.b.src, block.b.alt)}</figure></div>`;
-    }
-    const cls = block.type === "medium" ? "story-medium" : "story-large";
-    return `<figure class="${cls}">${image(block.photo.src, block.photo.alt)}</figure>`;
-  }).join("\n");
+  return `<div class="gallery-justified">${figures}<i class="gallery-filler" aria-hidden="true"></i></div>`;
 }
 
 function story(slug) {
-  const project = projects.find(p => p.slug === slug) || projects[0];
-  const quote = project.quote || "The pictures gave us back the day we were too full of joy to fully see.";
-  const quoteAuthor = project.quoteAuthor || "— AN R MAGIC CHARMS COUPLE";
-  const nextProject = projects[(projects.indexOf(project) + 1) % projects.length];
+  const album = projects.find(p => p.slug === slug) || projects[0];
+  if (!album) return notFound();
+
+  const quote = album.quote || "The pictures gave us back the day we were too full of joy to fully see.";
+  const quoteAuthor = album.quoteAuthor || "— AN R MAGIC CHARMS COUPLE";
+  const nextAlbum = projects[(projects.indexOf(album) + 1) % projects.length];
+  const intro = album.story || "A union blessed by family, tradition and sacred ritual. We preserve the silk, flowers, prayers and unrepeatable moments that make every auspicious celebration entirely its own.";
+
   return `
-    <section class="story-hero">${image(project.image, project.title, "eager")}<a class="back-link" href="#work">← &nbsp; Back to work</a><div><p class="eyebrow">${project.type} / ${project.year}</p><h1>${project.title}</h1><p>${project.location}</p></div></section>
-    <section class="story-intro"><p class="eyebrow">THE WEDDING STORY</p><p>A union blessed by family, tradition and sacred ritual. We preserve the silk, flowers, prayers and unrepeatable moments that make every auspicious celebration entirely its own.</p></section>
+    <section class="story-hero">${image(album.image, album.title, "eager", "100vw")}<a class="back-link" href="#work">← &nbsp; Back to work</a><div><p class="eyebrow">${album.type} / ${album.year}</p><h1>${album.title}</h1><p>${album.location}</p></div></section>
+    <section class="story-intro"><p class="eyebrow">THE WEDDING STORY</p><p>${intro}</p></section>
     <section class="story-gallery">
-      ${storyGallery(project)}
+      ${storyGallery(album)}
       <blockquote>"${quote}"<cite>${quoteAuthor}</cite></blockquote>
     </section>
-    <section class="next-project"><p class="eyebrow">NEXT STORY</p>${link(`story/${nextProject.slug}`, `<span>${nextProject.title}</span> <i>↗</i>`, "next-link")}</section>`;
+    <section class="next-project"><p class="eyebrow">NEXT STORY</p>${link(`story/${nextAlbum.slug}`, `<span>${nextAlbum.title}</span> <i>↗</i>`, "next-link")}</section>`;
+}
+
+// Full-screen viewer for a story gallery, with keyboard navigation and
+// neighbour preloading so stepping through an album never stalls.
+function bindGalleryLightbox(album) {
+  const triggers = [...document.querySelectorAll(".gallery-open")];
+  if (!triggers.length) return;
+  const photos = album.photos;
+
+  let index = 0;
+  let overlay = null;
+
+  const preload = position => {
+    const photo = photos[position];
+    if (!photo) return;
+    const img = new Image();
+    img.src = photoSrc(photo, 1600);
+  };
+
+  const show = position => {
+    index = (position + photos.length) % photos.length;
+    const photo = photos[index];
+    overlay.querySelector(".lightbox-figure").innerHTML =
+      `<img src="${photoSrc(photo, 1600)}" srcset="${srcsetFor(photo)}" sizes="92vw" alt="${photo.alt}" style="--r:${photo.ratio}">`;
+    overlay.querySelector(".lightbox-caption").textContent = photo.caption || photo.alt;
+    overlay.querySelector(".lightbox-count").textContent = `${index + 1} / ${photos.length}`;
+    preload(index + 1);
+    preload(index - 1);
+  };
+
+  const close = () => {
+    overlay?.remove();
+    overlay = null;
+    document.removeEventListener("keydown", onKeydown);
+    document.body.classList.remove("lightbox-open");
+  };
+
+  const onKeydown = event => {
+    if (event.key === "Escape") close();
+    else if (event.key === "ArrowRight") show(index + 1);
+    else if (event.key === "ArrowLeft") show(index - 1);
+  };
+
+  const open = position => {
+    overlay = document.createElement("div");
+    overlay.className = "lightbox";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", `${album.title} gallery`);
+    overlay.innerHTML = `
+      <button class="lightbox-close" type="button" aria-label="Close">×</button>
+      <button class="lightbox-nav prev" type="button" aria-label="Previous photograph">‹</button>
+      <button class="lightbox-nav next" type="button" aria-label="Next photograph">›</button>
+      <div class="lightbox-stage"><div class="lightbox-figure"></div>
+        <div class="lightbox-meta"><p class="lightbox-caption"></p><span class="lightbox-count"></span></div>
+      </div>`;
+    document.body.appendChild(overlay);
+    document.body.classList.add("lightbox-open");
+    overlay.querySelector(".lightbox-close").addEventListener("click", close);
+    overlay.querySelector(".prev").addEventListener("click", () => show(index - 1));
+    overlay.querySelector(".next").addEventListener("click", () => show(index + 1));
+    overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
+    document.addEventListener("keydown", onKeydown);
+    show(position);
+  };
+
+  triggers.forEach(trigger =>
+    trigger.addEventListener("click", () => open(Number(trigger.dataset.photo))));
 }
 
 function about() {
@@ -377,7 +505,7 @@ function about() {
   <section class="about-photo-hero">
     <div class="about-hero-inner">
       <figure class="about-photo-frame">
-        ${image("resources/uploads/about/photographer-at-work.webp", "The R Magic Charms photographer at work")}
+        ${image(sitePhoto("about", "photographer-at-work"), "The R Magic Charms photographer at work")}
       </figure>
       <div class="about-photo-text">
         <p class="eyebrow">THE PEOPLE BEHIND THE LENS</p>
@@ -401,7 +529,7 @@ function about() {
 
   <section class="about-portrait">
     <figure class="framed-photo">
-      ${image("resources/uploads/about/photographer-at-work.webp", "The R Magic Charms team photographing a celebration")}
+      ${image(sitePhoto("about", "photographer-at-work"), "The R Magic Charms team photographing a celebration")}
       <figcaption>On the mantap, working quietly · Karnataka</figcaption>
     </figure>
     <p>R Magic Charms is a South Indian wedding photography team devoted to preserving auspicious beginnings with grace and authenticity.<br><br>We understand that a wedding is more than one day: it is sacred ritual, ancestral tradition, joyful celebration and two families becoming one.</p>
@@ -413,9 +541,9 @@ function about() {
       <span class="heading-note">Temples, palaces &amp; hill country</span>
     </div>
     <div class="strip-grid">
-      <figure>${image("resources/editorial/hampi-temple.webp", "Temple architecture at Hampi")}<figcaption>Temple weddings</figcaption></figure>
-      <figure>${image("resources/editorial/mysuru-palace.webp", "Mysuru Palace")}<figcaption>Palace celebrations</figcaption></figure>
-      <figure>${image("resources/editorial/western-ghats.webp", "The Western Ghats")}<figcaption>Hill-country shoots</figcaption></figure>
+      <figure>${image(sitePhoto("editorial", "hampi-temple"), "Temple architecture at Hampi")}<figcaption>Temple weddings</figcaption></figure>
+      <figure>${image(sitePhoto("editorial", "mysuru-palace"), "Mysuru Palace")}<figcaption>Palace celebrations</figcaption></figure>
+      <figure>${image(sitePhoto("editorial", "western-ghats"), "The Western Ghats")}<figcaption>Hill-country shoots</figcaption></figure>
     </div>
   </section>
 
@@ -429,7 +557,7 @@ function about() {
   </section>
 
   <section class="quote-band">
-    ${image("resources/uploads/portfolio/wedding-blessing-ritual.webp", "Elders blessing the couple at a South Indian wedding")}
+    ${image(sitePhoto("portfolio", "wedding-blessing-ritual"), "Elders blessing the couple at a South Indian wedding")}
     <div class="quote-band-scrim"></div>
     <blockquote>
       <p class="eyebrow">WHAT WE BELIEVE</p>
@@ -478,37 +606,45 @@ function ctaBand(title, copy) {
 }
 
 const IS_LOCAL_PREVIEW = ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
+// Replaces the old folder-scanning gallery. The manifest already knows every
+// photograph and which album it belongs to, so this works identically on the
+// static host instead of only in the local preview server.
+function latestFrames(limit) {
+  const seen = new Set();
+  const frames = [];
+  for (const album of projects) {
+    for (const photo of album.photos) {
+      if (seen.has(photo.base)) continue;
+      seen.add(photo.base);
+      frames.push({ photo, album });
+      if (frames.length >= limit) return frames;
+    }
+  }
+  return frames;
+}
 
-async function populateUploadedImages(page) {
-  // /api/images only exists in the local Python preview server. On the static
-  // host it is a guaranteed miss, so skip the uncacheable round trip entirely.
-  if (!IS_LOCAL_PREVIEW) return;
-  const section = page === "contact" ? "about" : page === "work" ? "portfolio" : page;
+function populateLatestFrames(page) {
   const settings = {
-    home: { target: "homeUploads", eyebrow: "NEWLY ADDED", title: "Latest <em>frames</em>" },
-    about: { target: "aboutUploads", eyebrow: "THE CRAFT", title: "Behind the <em>frame</em>" },
-    portfolio: { target: "portfolioUploads", eyebrow: "MORE FROM THE ARCHIVE", title: "Recently <em>added</em>" },
-  }[section];
+    home: { target: "homeUploads", eyebrow: "NEWLY ADDED", title: "Latest <em>frames</em>", frames: latestFrames(6) },
+    about: {
+      target: "aboutUploads", eyebrow: "THE CRAFT", title: "Behind the <em>frame</em>",
+      frames: siteGroup("editorial").map(photo => ({ photo, album: null })),
+    },
+  }[page];
   if (!settings) return;
 
-  try {
-    const response = await fetch(`/api/images?section=${section}&fresh=${Date.now()}`, { cache: "no-store" });
-    if (!response.ok) throw new Error("Unable to scan image uploads");
-    const { images = [] } = await response.json();
-    const target = document.getElementById(settings.target);
-    if (!target || !images.length) return;
-    target.hidden = false;
-    target.innerHTML = `
-      <div class="uploaded-photo-heading"><p class="eyebrow">${settings.eyebrow}</p><h2>${settings.title}</h2></div>
-      <div class="uploaded-photo-grid">${images.map(item => `
-        <figure>
-          ${image(item.src, item.alt)}
-          <figcaption><span>${item.title}</span>${item.credit ? `<a href="${item.creditUrl || "#"}" target="_blank" rel="noreferrer">${item.credit}</a>` : ""}</figcaption>
-        </figure>`).join("")}
-      </div>`;
-  } catch {
-    // The fixed site content remains complete when an optional upload folder is unavailable.
-  }
+  const target = document.getElementById(settings.target);
+  if (!target || !settings.frames.length) return;
+
+  target.hidden = false;
+  target.innerHTML = `
+    <div class="uploaded-photo-heading"><p class="eyebrow">${settings.eyebrow}</p><h2>${settings.title}</h2></div>
+    <div class="uploaded-photo-grid">${settings.frames.map(({ photo, album }) => `
+      <figure style="--tint:${photo.tint}">
+        ${image(photo, photo.alt, "", "(max-width: 720px) 46vw, 30vw")}
+        <figcaption><span>${album ? album.title : photo.alt}</span>${album ? `<a href="#story/${album.slug}">${album.type} ↗</a>` : ""}</figcaption>
+      </figure>`).join("")}
+    </div>`;
 }
 
 function enquirySection() {
@@ -517,7 +653,7 @@ function enquirySection() {
   <section class="contact-anchor" id="enquiry">
     <div class="contact-intro"><p class="eyebrow">STUDIO &amp; ENQUIRIES</p><h2>Tell us about your<br><em>auspicious celebration.</em></h2><p>Share your dates, traditions, ceremonies and the families gathering to bless your new beginning. We respond personally and guide you through the next steps.</p></div>
     <section class="contact-choice"><p class="eyebrow">CHOOSE HOW TO REACH US</p><div><a class="contact-choice-card" href="https://wa.me/${brand.phoneDigits}?text=${encodeURIComponent("Namaste R Magic Charms, we are planning our wedding and would like to discuss photography.")}" target="_blank" rel="noreferrer"><span>01</span><h2>Speak with us</h2><p>Tell us about your celebration and the traditions important to your family.</p><b>Open WhatsApp ↗</b></a><button type="button" class="contact-choice-card" data-scroll-inquiry><span>02</span><h2>Share the details</h2><p>Send your ceremonies, dates and location as one formal wedding inquiry.</p><b>Fill the form ↓</b></button></div></section>
-    <section class="contact-layout"><form id="inquiry-form" novalidate><label>Your name<input name="name" autocomplete="name" required placeholder="Bride, groom or family contact" /></label><label>Mobile number<input name="phone" type="tel" autocomplete="tel" required placeholder="+91 98765 43210" /></label><label>Email address (optional)<input name="email" type="email" autocomplete="email" placeholder="you@example.com" /></label><label>What are we celebrating?<select name="kind"><option>Complete wedding celebration</option><option>Pre-Wedding</option><option>Engagement</option><option>Haldi or Mehendi</option><option>Wedding or Muhurtham</option><option>Reception</option><option>Couple or portrait shoot</option><option>Post-Wedding</option><option>We would like your guidance</option></select></label><label>Event date and location<input name="event" required placeholder="12 December 2026, Bengaluru" /></label><label>Tell us about the ceremonies<textarea name="message" required placeholder="Traditions, rituals, number of days and the moments important to your family…"></textarea></label><button type="submit" class="submit-button">Review &amp; send on WhatsApp <span>↗</span></button><p class="form-note">Submitting opens WhatsApp with your details. Review the message and tap Send so your inquiry reaches R Magic Charms directly.</p><p class="form-status" aria-live="polite"></p></form><aside><figure class="aside-photo">${image("resources/uploads/portfolio/intimate-couple-portrait.webp", "A quiet moment between a couple")}</figure><p class="eyebrow">R MAGIC CHARMS</p><a href="tel:+${brand.phoneDigits}">${brand.phoneDisplay}</a>${emailLink}<p><a href="${brand.mapUrl}" target="_blank" rel="noreferrer">${brand.location} ↗</a><br>Available across India and worldwide</p><div><a href="https://wa.me/${brand.phoneDigits}" target="_blank" rel="noreferrer">Formal WhatsApp enquiry ↗</a><a href="https://www.instagram.com/${brand.instagram}" target="_blank" rel="noreferrer">@${brand.instagram} ↗</a></div></aside></section>
+    <section class="contact-layout"><form id="inquiry-form" novalidate><label>Your name<input name="name" autocomplete="name" required placeholder="Bride, groom or family contact" /></label><label>Mobile number<input name="phone" type="tel" autocomplete="tel" required placeholder="+91 98765 43210" /></label><label>Email address (optional)<input name="email" type="email" autocomplete="email" placeholder="you@example.com" /></label><label>What are we celebrating?<select name="kind"><option>Complete wedding celebration</option><option>Pre-Wedding</option><option>Engagement</option><option>Haldi or Mehendi</option><option>Wedding or Muhurtham</option><option>Reception</option><option>Couple or portrait shoot</option><option>Post-Wedding</option><option>We would like your guidance</option></select></label><label>Event date and location<input name="event" required placeholder="12 December 2026, Bengaluru" /></label><label>Tell us about the ceremonies<textarea name="message" required placeholder="Traditions, rituals, number of days and the moments important to your family…"></textarea></label><button type="submit" class="submit-button">Review &amp; send on WhatsApp <span>↗</span></button><p class="form-note">Submitting opens WhatsApp with your details. Review the message and tap Send so your inquiry reaches R Magic Charms directly.</p><p class="form-status" aria-live="polite"></p></form><aside><figure class="aside-photo">${image(sitePhoto("portfolio", "intimate-couple-portrait"), "A quiet moment between a couple")}</figure><p class="eyebrow">R MAGIC CHARMS</p><a href="tel:+${brand.phoneDigits}">${brand.phoneDisplay}</a>${emailLink}<p><a href="${brand.mapUrl}" target="_blank" rel="noreferrer">${brand.location} ↗</a><br>Available across India and worldwide</p><div><a href="https://wa.me/${brand.phoneDigits}" target="_blank" rel="noreferrer">Formal WhatsApp enquiry ↗</a><a href="https://www.instagram.com/${brand.instagram}" target="_blank" rel="noreferrer">@${brand.instagram} ↗</a></div></aside></section>
   </section>`;
 }
 
@@ -535,7 +671,7 @@ function contact() {
       </div>
     </div>
     <figure class="framed-photo">
-      ${image("resources/uploads/portfolio/wedding-forehead-blessing.webp", "A blessing given at a South Indian wedding")}
+      ${image(sitePhoto("portfolio", "wedding-forehead-blessing"), "A blessing given at a South Indian wedding")}
       <figcaption>A blessing, quietly received · Karnataka</figcaption>
     </figure>
   </section>
@@ -543,7 +679,7 @@ function contact() {
   ${enquirySection()}
 
   <section class="quote-band">
-    ${image("resources/uploads/portfolio/south-indian-wedding-portrait.webp", "South Indian bride and groom at the muhurtham")}
+    ${image(sitePhoto("portfolio", "south-indian-wedding-portrait"), "South Indian bride and groom at the muhurtham")}
     <div class="quote-band-scrim"></div>
     <blockquote>
       <p class="eyebrow">WHY FAMILIES CHOOSE US</p>
@@ -580,10 +716,16 @@ function render() {
   observeReveals();
   bindForm();
   bindFilters();
-  if (page === "home") bindHeroVideo();
-  if (page === "home") bindHeroSound();
-  if (page === "home") populateInstaGrid();
-  if (["home", "about", "contact", "work"].includes(page)) populateUploadedImages(page);
+  if (page === "home") {
+    bindHeroVideo();
+    bindHeroSound();
+    populateInstaGrid();
+  }
+  if (page === "story") {
+    const album = projects.find(p => p.slug === slug) || projects[0];
+    if (album) bindGalleryLightbox(album);
+  }
+  populateLatestFrames(page);
 }
 
 // The hero loop is by far the heaviest asset on the page. Its poster paints

@@ -1,4 +1,4 @@
-﻿:root{
+:root{
   --bark:     #211410;
   --paper:    #FBF7EF;
   --silk:     #F3E9DA;
@@ -191,7 +191,7 @@ button,input,select,textarea{font:inherit}
 .project-location{font-size:11px;margin:0;color:var(--muted)}
 .card-hit{position:absolute;inset:0;z-index:2;text-indent:-999px}
 
-/* statement band â€” deep terracotta/kumkum */
+/* statement band — deep terracotta/kumkum */
 .statement-band{padding:120px 8vw;min-height:760px;background:radial-gradient(circle at 78% 45%,rgba(222,191,115,.16),transparent 27%),repeating-linear-gradient(45deg,rgba(250,240,220,.018) 0 1px,transparent 1px 44px),repeating-linear-gradient(-45deg,rgba(250,240,220,.018) 0 1px,transparent 1px 44px),#5A1726;color:#FAF0DC;position:relative;overflow:hidden;display:grid;grid-template-columns:1.08fr .92fr;gap:7vw;align-items:center;isolation:isolate}
 .statement-band::before{content:"";position:absolute;inset:22px;z-index:-1;border:1px solid rgba(232,200,122,.18);pointer-events:none}
 .statement-band::after{content:"";position:absolute;width:360px;height:360px;left:-190px;bottom:-190px;border:1px solid rgba(232,200,122,.17);border-radius:50%;box-shadow:0 0 0 34px rgba(232,200,122,.025),0 0 0 85px rgba(232,200,122,.018);z-index:-1}
@@ -540,13 +540,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
 }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   OBSIDIAN & CHAMPAGNE â€” R Magic Charms design system
+   OBSIDIAN & CHAMPAGNE — R Magic Charms design system
    One continuous dark canvas. Depth comes from tone, light and typography,
    never from clashing section colours. Photographs supply the colour.
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 :root{
-  /* Surfaces â€” a single obsidian family, warm-shifted */
+  /* Surfaces — a single obsidian family, warm-shifted */
   --paper:#08080A;
   --silk:#0E0E11;
   --warm:#141116;
@@ -557,7 +557,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   --muted:#B3ADA4;
   --faint:rgba(251,248,242,.6);
 
-  /* Accents â€” champagne leads, crimson punctuates */
+  /* Accents — champagne leads, crimson punctuates */
   --gold:#C9A961;
   --gold-hi:#E9DCB6;
   --gold-soft:rgba(201,169,97,.28);
@@ -656,7 +656,7 @@ h1,h2,h3{text-wrap:balance}
   color:var(--gold-hi);letter-spacing:.16em;transition:background .35s var(--ease),color .35s,border-color .35s,transform .35s}
 .hero-cta:hover{background:var(--gold);border-color:var(--gold);color:#0A0908;transform:translateY(-2px)}
 
-/* â”€â”€ Section rhythm â€” one canvas, tonal lighting only â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* â”€â”€ Section rhythm — one canvas, tonal lighting only â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .offerings,
 .selected-work,
 .statement-band,
@@ -730,7 +730,7 @@ h1,h2,h3{text-wrap:balance}
 .project-link{color:var(--gold-hi);border-color:var(--gold-soft)}
 #homeUploads{padding-bottom:var(--section-y)}
 
-/* â”€â”€ 03 Statement â€” deep ink, ceremonial light â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* â”€â”€ 03 Statement — deep ink, ceremonial light â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .statement-band{
   background:
     radial-gradient(48% 44% at 76% 44%,rgba(201,169,97,.11),transparent 68%),
@@ -1190,3 +1190,76 @@ label{color:#C4BCB1}
 .insta-video::after{content:"▶";position:absolute;right:13px;top:11px;font-size:16px;text-shadow:0 2px 8px rgba(0,0,0,.65)}
 .insta-video:hover::after{opacity:0}
 .insta-viewer video{display:block;max-width:100%;max-height:72vh;object-fit:contain;background:#000}
+
+/* ── Media pipeline: justified gallery, lightbox and tint placeholders ─────── */
+
+/* Every generated photo carries its averaged colour, so a tile is never a
+   blank white hole while its file is still arriving. */
+img[style*="--tint"] { background-color: var(--tint, #17161a); }
+
+.gallery-justified { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+.gallery-justified figure {
+  flex: var(--r) 1 calc(var(--r) * 230px);
+  margin: 0; position: relative; overflow: hidden;
+  background: var(--tint, #17161a);
+}
+.gallery-justified .gallery-open {
+  display: block; width: 100%; padding: 0; border: 0; cursor: zoom-in;
+  background: none; aspect-ratio: var(--r);
+}
+.gallery-justified figure img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(.82) contrast(1.03);
+  transition: transform .9s cubic-bezier(.22,1,.36,1), filter .5s;
+}
+.gallery-justified figure:hover img { transform: scale(1.04); filter: saturate(.96) contrast(1.03); }
+.gallery-justified figcaption {
+  font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+  opacity: .6; padding: 8px 2px 0;
+}
+/* Stops a lone trailing photograph from stretching across the whole row. */
+.gallery-filler { flex-grow: 999999; flex-basis: 260px; height: 0; }
+
+body.lightbox-open { overflow: hidden; }
+.lightbox {
+  position: fixed; inset: 0; z-index: 120; display: grid; place-items: center;
+  background: rgba(6,6,8,.94); backdrop-filter: blur(6px); padding: 4vh 6vw;
+  animation: lightbox-in .25s ease;
+}
+@keyframes lightbox-in { from { opacity: 0 } to { opacity: 1 } }
+.lightbox-stage { display: flex; flex-direction: column; gap: 14px; max-height: 92vh; }
+.lightbox-figure { display: flex; justify-content: center; min-height: 0; }
+.lightbox-figure img {
+  max-width: 100%; max-height: 82vh; width: auto; height: auto;
+  object-fit: contain; box-shadow: 0 30px 90px rgba(0,0,0,.6);
+}
+.lightbox-meta {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 20px;
+  font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; opacity: .72;
+}
+.lightbox-close, .lightbox-nav {
+  position: absolute; border: 0; cursor: pointer; color: #f4efe7;
+  background: rgba(255,255,255,.07); border-radius: 50%;
+  display: grid; place-items: center; transition: background .3s, transform .3s;
+}
+.lightbox-close:hover, .lightbox-nav:hover { background: rgba(255,255,255,.16); }
+.lightbox-close { top: 18px; right: 20px; width: 44px; height: 44px; font-size: 1.5rem; line-height: 1; }
+.lightbox-nav { top: 50%; transform: translateY(-50%); width: 52px; height: 52px; font-size: 2rem; line-height: 1; }
+.lightbox-nav.prev { left: 16px; }
+.lightbox-nav.next { right: 16px; }
+.lightbox-nav:hover { transform: translateY(-50%) scale(1.06); }
+
+.project-count { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; opacity: .48; margin-top: 4px; }
+
+@media (max-width: 720px) {
+  .gallery-justified { gap: 10px; }
+  .gallery-justified figure { flex-basis: calc(var(--r) * 150px); }
+  .lightbox { padding: 2vh 0; }
+  .lightbox-nav { width: 42px; height: 42px; font-size: 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-justified figure img { transition: none; }
+  .gallery-justified figure:hover img { transform: none; }
+  .lightbox { animation: none; }
+}

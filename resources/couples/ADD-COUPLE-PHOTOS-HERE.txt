@@ -1,9 +1,0 @@
-Create one folder per couple here.
-
-Example:
-resources/couples/anita-and-arun/
-
-Place that couple's JPG, JPEG, PNG, or WEBP files inside their folder, then add
-the couple block to the COUPLE STORIES section in content.js.
-
-Full instructions: C:\Personal\saanjh-studio\HOW-TO-ADD-MEDIA.txt

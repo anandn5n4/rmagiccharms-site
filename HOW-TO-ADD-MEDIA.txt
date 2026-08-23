@@ -1,69 +1,107 @@
-R MAGIC CHARMS — HOW TO ADD PHOTOS AND COUPLES
-===============================================
+================================================================================
+ R MAGIC CHARMS — HOW TO ADD PHOTOGRAPHS
+================================================================================
 
-AUTOMATIC IMAGE SECTIONS
-------------------------
-For normal image updates, no code change is required. Copy images into:
-
-    resources/uploads/home/       -> Home page
-    resources/uploads/about/      -> Studio & Enquiries page
-    resources/uploads/portfolio/  -> Work page
-
-Refresh the website. Newest files appear first.
-
-See resources/uploads/README.txt for optional captions and credits.
+You never edit image paths by hand. You drop files into media-src/ and run one
+command. Everything else is generated.
 
 
-The website content is organized in one file:
+--------------------------------------------------------------------------------
+ THE TWO FOLDERS
+--------------------------------------------------------------------------------
 
-    content.js
+  media-src/    YOUR working folder. Full-resolution exports live here.
+                It is NOT uploaded to the website and NOT stored in GitHub
+                (only the small album.json files are), so keep your own backup.
 
-You do not need to edit app.js for normal photo updates.
-
-
-ADD A NEW COUPLE
-----------------
-1. Create a folder:
-
-       resources/couples/couple-name/
-
-2. Copy that couple's photos into the folder.
-   Recommended formats: JPG, JPEG, PNG, or WEBP.
-
-3. Open content.js and find "COUPLE STORIES".
-
-4. Copy one complete couple block, paste it after the last block, and update:
-   - slug: lowercase unique name, for example "anita-and-arun"
-   - title: the couple's display name
-   - type: PRE-WEDDING, MUHURTHAM, RECEPTION, etc.
-   - filter: pre-wedding, nalangu-haldi, muhurtham, or sangeet-reception
-   - location and year
-   - image: cover photo shown in the main gallery
-   - photos: every photo shown inside their story
-
-5. Use these photo sizes:
-   - large: full-width photograph
-   - medium: smaller offset photograph
-   - duo: place two consecutive photos side by side
-
-Example photo path:
-
-    resources/couples/anita-and-arun/cover.jpg
+  resources/    GENERATED. Never edit this by hand — it is wiped and rebuilt
+                every time you run media.bat.
 
 
-INSTAGRAM
----------
-The home page uses repository-hosted photographs so it remains fast and
-reliable on Cloudflare Pages. Update the Instagram gallery paths in content.js.
-Each photograph opens inside the website.
+--------------------------------------------------------------------------------
+ ADDING A NEW WEDDING
+--------------------------------------------------------------------------------
+
+ 1. Make a folder named after the couple:
+
+        media-src\photos\anjali-and-suresh\
+
+ 2. Copy the photographs in. Any size, straight from Lightroom. File names do
+    not matter, but they control the order, so 001.jpg, 002.jpg… is easiest.
+
+ 3. Create album.json inside that folder:
+
+        {
+          "title": "Anjali & Suresh",
+          "ceremony": "Muhurtham",
+          "filter": "muhurtham",
+          "location": "Mysuru, Karnataka",
+          "date": "2025-04",
+          "featured": true,
+          "cover": "003",
+          "quote": "They gave us back the day we were too happy to notice.",
+          "quoteAuthor": "— ANJALI & SURESH",
+          "captions": {
+            "003": { "alt": "The mangalsutra moment", "caption": "Muhurtham" }
+          }
+        }
+
+    Only "title" is really required. Everything else is optional.
+
+      filter    Groups it under a button on the Work page. Use one of:
+                pre-wedding · nalangu-haldi · muhurtham · sangeet-reception
+      date      YYYY-MM. Controls ordering — newest album appears first.
+      featured  Highlights it on the home page.
+      cover     Photo id (file name without extension) used as the card image.
+      listed    Set to false to publish the photos but hide the album.
+
+ 4. Run:
+
+        media.bat
+
+ 5. Preview with start.bat, then commit and push.
+
+The new album appears on the Work page automatically. There is nothing to edit
+in content.js, app.js or index.html.
 
 
-CONTACT INQUIRIES
------------------
-The WhatsApp chat button and inquiry form both use:
+--------------------------------------------------------------------------------
+ OTHER SITE IMAGERY
+--------------------------------------------------------------------------------
 
-    +91 78923 22716
+Non-album pictures live in media-src\site\<group>\ :
 
-The form creates a structured WhatsApp message with the visitor's name,
-mobile, event type, date, location, and details. The visitor reviews the
-message and taps Send, so the inquiry arrives directly in WhatsApp.
+    site\offerings\    the service cards on the home page
+    site\portfolio\    the Instagram-style grid
+    site\editorial\    the "Behind the frame" strip
+    site\about\        the About page portrait
+    site\brand\        logo and mark
+
+Replace a file, keep the same name, run media.bat, and it updates everywhere.
+
+The home page hero poster is set in media-src\site.json.
+
+
+--------------------------------------------------------------------------------
+ VIDEO
+--------------------------------------------------------------------------------
+
+media-src\video\hero-loop.mp4 is the home page loop. It is copied through
+byte-for-byte and never re-compressed, so quality is exactly what you exported.
+Keep it short — it is the heaviest file on the site.
+
+
+--------------------------------------------------------------------------------
+ WHAT media.bat ACTUALLY DOES
+--------------------------------------------------------------------------------
+
+For every photograph it writes 400px, 900px and 1600px WebP versions, and
+records the real width, height and average colour in resources\media.json.
+
+That is what lets a phone download a 400px file instead of the desktop one,
+lets galleries lay out perfectly before the images arrive, and lets a tile show
+the photograph's own colour instead of a white gap while it loads.
+
+If it complains about Pillow:
+
+    python -m pip install Pillow

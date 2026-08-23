@@ -8,19 +8,18 @@ __pycache__/
 Thumbs.db
 .vscode/
 
-# Playback media is not part of the photography website.
+# Master media. media-src/ is the working area: the full-resolution originals
+# stay on your machine, but the album metadata that describes them is tracked
+# so the site can always be rebuilt from this repository.
+media-src/**
+!media-src/**/
+!media-src/**/album.json
+!media-src/**/captions.json
+
+# Video is never re-encoded, so only the published homepage loop is committed.
 *.mp4
 *.mpeg
 *.webm
 *.mov
 *.m4v
-resources/web/
-!resources/web/
-!resources/web/hero-loop.mp4
-
-# Additional source masters
-resources/source/
-resources/masters/
-
-# Pre-optimisation originals kept locally so image conversion is reversible.
-resources/_originals/
+!resources/video/hero-loop.mp4!media-src/site.json

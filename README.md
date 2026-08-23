@@ -1,14 +1,52 @@
 # R Magic Charms
 
-Wedding photography portfolio for R Magic Charms.
+South Indian wedding photography portfolio for R Magic Charms.
 
 ## Local preview
 
 Run `start.bat`, then open <http://localhost:4173>.
 
-The local Python server provides media-folder discovery.
-The published Cloudflare Pages site remains fully usable when those optional
-local endpoints are unavailable.
+The site is fully static. Nothing is fetched from a local API, so the preview
+behaves exactly like the published site.
+
+## Adding photographs
+
+Photographs are never referenced by hand. Drop a shoot into `media-src/`, then
+run:
+
+```
+media.bat
+```
+
+That regenerates `resources/` and `media.js`, and the album appears on the Work
+page automatically. See `HOW-TO-ADD-MEDIA.txt` for the full walkthrough.
+
+## How the media pipeline works
+
+```
+media-src/                    your working folder (kept off the website)
+  photos/<album>/*.jpg        one folder per shoot -> one gallery
+  photos/<album>/album.json   title, date, ceremony, cover, captions
+  site/<group>/*.jpg          offerings, portfolio, editorial, about, brand
+  site.json                   picks the home page hero poster
+  video/hero-loop.mp4         copied through, never re-encoded
+
+resources/                    generated, committed, served
+  photos/... site/...         400 / 900 / 1600px WebP of every image
+  media.json                  the manifest
+media.js                      the manifest as a script tag
+```
+
+`tools/build_media.py` records each photograph's real width, height and average
+colour. The site uses that to serve phones a 400px file instead of the desktop
+one, to lay galleries out before the images arrive, and to keep the homepage
+hero preload in `index.html` pointing at a file that actually exists.
+
+## Updating the rest
+
+- Studio contact details: `content.js`
+- Page templates and behaviour: `app.js`
+- Theme and layout: `styles.css`
 
 ## Cloudflare Pages
 
@@ -18,17 +56,6 @@ local endpoints are unavailable.
 - Build command: leave empty
 - Build output directory: `/`
 
-The site keeps one optimized 20-second homepage loop. Other large playback
-assets and source masters are excluded.
-
-## Updating content
-
-- Brand and projects: `content.js`
-- Page templates and behaviour: `app.js`
-- Theme and layout: `styles.css`
-- Portfolio images: `resources/uploads/portfolio/`
-- Studio images: `resources/uploads/about/`
-- Homepage and hover-preview loop: `resources/web/hero-loop.mp4`
-
-See `HOW-TO-ADD-MEDIA.txt` for the media-folder conventions used by the local
-preview server.
+`resources/` is committed already built, so Cloudflare only has to serve files.
+Remember to bump the `?v=` cache version in `index.html` after editing
+`app.js`, `styles.css` or `fixes.css`.

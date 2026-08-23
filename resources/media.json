@@ -1,0 +1,999 @@
+{
+  "generated": "2026-08-23T14:40:37+00:00",
+  "widths": [
+    400,
+    900,
+    1600
+  ],
+  "heroPoster": {
+    "id": "01",
+    "base": "resources/photos/latha-and-yathish/01",
+    "widths": [
+      400,
+      900,
+      1600
+    ],
+    "w": 7008,
+    "h": 4672,
+    "ratio": 1.5,
+    "tint": "#8a7665",
+    "alt": "01"
+  },
+  "albums": [
+    {
+      "slug": "wedding-day",
+      "title": "Wedding Day",
+      "ceremony": "Muhurtham",
+      "filter": "muhurtham",
+      "location": "Karnataka",
+      "date": "",
+      "year": "",
+      "quote": "",
+      "quoteAuthor": "",
+      "story": "",
+      "listed": true,
+      "featured": false,
+      "cover": {
+        "id": "03",
+        "base": "resources/photos/wedding-day/03",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 7008,
+        "h": 4672,
+        "ratio": 1.5,
+        "tint": "#8a7465",
+        "alt": "03"
+      },
+      "photos": [
+        {
+          "id": "01",
+          "base": "resources/photos/wedding-day/01",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 3240,
+          "h": 3240,
+          "ratio": 1.0,
+          "tint": "#9e8472",
+          "alt": "01"
+        },
+        {
+          "id": "02",
+          "base": "resources/photos/wedding-day/02",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 3240,
+          "h": 3240,
+          "ratio": 1.0,
+          "tint": "#ab9d8a",
+          "alt": "02"
+        },
+        {
+          "id": "03",
+          "base": "resources/photos/wedding-day/03",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#8a7465",
+          "alt": "03"
+        },
+        {
+          "id": "04",
+          "base": "resources/photos/wedding-day/04",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#9f8576",
+          "alt": "04"
+        },
+        {
+          "id": "05",
+          "base": "resources/photos/wedding-day/05",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#b88d78",
+          "alt": "05"
+        },
+        {
+          "id": "06",
+          "base": "resources/photos/wedding-day/06",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#876f64",
+          "alt": "06"
+        }
+      ]
+    },
+    {
+      "slug": "reception",
+      "title": "Reception",
+      "ceremony": "Sangeet & Reception",
+      "filter": "sangeet-reception",
+      "location": "Karnataka",
+      "date": "",
+      "year": "",
+      "quote": "",
+      "quoteAuthor": "",
+      "story": "",
+      "listed": true,
+      "featured": false,
+      "cover": {
+        "id": "01",
+        "base": "resources/photos/reception/01",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 7008,
+        "h": 4672,
+        "ratio": 1.5,
+        "tint": "#a69c9b",
+        "alt": "01"
+      },
+      "photos": [
+        {
+          "id": "01",
+          "base": "resources/photos/reception/01",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#a69c9b",
+          "alt": "01"
+        },
+        {
+          "id": "02",
+          "base": "resources/photos/reception/02",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 6413,
+          "h": 4275,
+          "ratio": 1.5001,
+          "tint": "#a2958c",
+          "alt": "02"
+        }
+      ]
+    },
+    {
+      "slug": "latha-and-yathish",
+      "title": "Latha & Yathish",
+      "ceremony": "Pre-Wedding",
+      "filter": "pre-wedding",
+      "location": "Karnataka",
+      "date": "",
+      "year": "",
+      "quote": "",
+      "quoteAuthor": "",
+      "story": "",
+      "listed": true,
+      "featured": true,
+      "cover": {
+        "id": "01",
+        "base": "resources/photos/latha-and-yathish/01",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 7008,
+        "h": 4672,
+        "ratio": 1.5,
+        "tint": "#8a7665",
+        "alt": "01"
+      },
+      "photos": [
+        {
+          "id": "01",
+          "base": "resources/photos/latha-and-yathish/01",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#8a7665",
+          "alt": "01"
+        },
+        {
+          "id": "02",
+          "base": "resources/photos/latha-and-yathish/02",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#aaa39c",
+          "alt": "02"
+        },
+        {
+          "id": "03",
+          "base": "resources/photos/latha-and-yathish/03",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#9b9286",
+          "alt": "03"
+        },
+        {
+          "id": "04",
+          "base": "resources/photos/latha-and-yathish/04",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#a39f98",
+          "alt": "04"
+        },
+        {
+          "id": "05",
+          "base": "resources/photos/latha-and-yathish/05",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#97948c",
+          "alt": "05"
+        },
+        {
+          "id": "06",
+          "base": "resources/photos/latha-and-yathish/06",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#b5babe",
+          "alt": "06"
+        },
+        {
+          "id": "07",
+          "base": "resources/photos/latha-and-yathish/07",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#1e1c19",
+          "alt": "07"
+        }
+      ]
+    },
+    {
+      "slug": "haldi-ceremony",
+      "title": "Haldi Ceremony",
+      "ceremony": "Nalangu & Haldi",
+      "filter": "nalangu-haldi",
+      "location": "Karnataka",
+      "date": "",
+      "year": "",
+      "quote": "",
+      "quoteAuthor": "",
+      "story": "",
+      "listed": true,
+      "featured": true,
+      "cover": {
+        "id": "02",
+        "base": "resources/photos/haldi-ceremony/02",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 7008,
+        "h": 4672,
+        "ratio": 1.5,
+        "tint": "#aa7f3d",
+        "alt": "02"
+      },
+      "photos": [
+        {
+          "id": "01",
+          "base": "resources/photos/haldi-ceremony/01",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#8e832d",
+          "alt": "01"
+        },
+        {
+          "id": "02",
+          "base": "resources/photos/haldi-ceremony/02",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#aa7f3d",
+          "alt": "02"
+        },
+        {
+          "id": "03",
+          "base": "resources/photos/haldi-ceremony/03",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#a17840",
+          "alt": "03"
+        },
+        {
+          "id": "04",
+          "base": "resources/photos/haldi-ceremony/04",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#b28d53",
+          "alt": "04"
+        },
+        {
+          "id": "05",
+          "base": "resources/photos/haldi-ceremony/05",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#ac8a52",
+          "alt": "05"
+        },
+        {
+          "id": "06",
+          "base": "resources/photos/haldi-ceremony/06",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#816e40",
+          "alt": "06"
+        },
+        {
+          "id": "07",
+          "base": "resources/photos/haldi-ceremony/07",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#806b37",
+          "alt": "07"
+        },
+        {
+          "id": "08",
+          "base": "resources/photos/haldi-ceremony/08",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 3370,
+          "h": 4091,
+          "ratio": 0.8238,
+          "tint": "#968039",
+          "alt": "08"
+        },
+        {
+          "id": "09",
+          "base": "resources/photos/haldi-ceremony/09",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#a28341",
+          "alt": "09"
+        }
+      ]
+    },
+    {
+      "slug": "asha-and-chethu",
+      "title": "Asha & Chethu",
+      "ceremony": "Wedding Day",
+      "filter": "muhurtham",
+      "location": "Karnataka",
+      "date": "",
+      "year": "",
+      "quote": "The vows were quiet. The photographs were not.",
+      "quoteAuthor": "ASHA & CHETHU",
+      "story": "",
+      "listed": true,
+      "featured": true,
+      "cover": {
+        "id": "03",
+        "base": "resources/photos/asha-and-chethu/03",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 8832,
+        "h": 5888,
+        "ratio": 1.5,
+        "tint": "#5d5349",
+        "alt": "03"
+      },
+      "photos": [
+        {
+          "id": "01",
+          "base": "resources/photos/asha-and-chethu/01",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 6336,
+          "h": 9504,
+          "ratio": 0.6667,
+          "tint": "#a28072",
+          "alt": "01"
+        },
+        {
+          "id": "02",
+          "base": "resources/photos/asha-and-chethu/02",
+          "widths": [
+            400,
+            667
+          ],
+          "w": 667,
+          "h": 1000,
+          "ratio": 0.667,
+          "tint": "#64584e",
+          "alt": "02"
+        },
+        {
+          "id": "03",
+          "base": "resources/photos/asha-and-chethu/03",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 8832,
+          "h": 5888,
+          "ratio": 1.5,
+          "tint": "#5d5349",
+          "alt": "03"
+        }
+      ]
+    },
+    {
+      "slug": "asha-and-chethu-pre-wedding",
+      "title": "Asha & Chethu",
+      "ceremony": "Pre-Wedding",
+      "filter": "pre-wedding",
+      "location": "Karnataka",
+      "date": "",
+      "year": "",
+      "quote": "",
+      "quoteAuthor": "",
+      "story": "",
+      "listed": true,
+      "featured": true,
+      "cover": {
+        "id": "04",
+        "base": "resources/photos/asha-and-chethu-pre-wedding/04",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 7008,
+        "h": 4672,
+        "ratio": 1.5,
+        "tint": "#a09689",
+        "alt": "04"
+      },
+      "photos": [
+        {
+          "id": "01",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/01",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#7b7270",
+          "alt": "01"
+        },
+        {
+          "id": "02",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/02",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4086,
+          "h": 5760,
+          "ratio": 0.7094,
+          "tint": "#596564",
+          "alt": "02"
+        },
+        {
+          "id": "03",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/03",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#6f7a7d",
+          "alt": "03"
+        },
+        {
+          "id": "04",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/04",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#a09689",
+          "alt": "04"
+        },
+        {
+          "id": "05",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/05",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 6891,
+          "h": 4594,
+          "ratio": 1.5,
+          "tint": "#89847f",
+          "alt": "05"
+        },
+        {
+          "id": "06",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/06",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#877d5d",
+          "alt": "06"
+        },
+        {
+          "id": "07",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/07",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#a3abad",
+          "alt": "07"
+        },
+        {
+          "id": "08",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/08",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#a6978c",
+          "alt": "08"
+        },
+        {
+          "id": "09",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/09",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 4672,
+          "h": 7008,
+          "ratio": 0.6667,
+          "tint": "#2e210f",
+          "alt": "09"
+        },
+        {
+          "id": "10",
+          "base": "resources/photos/asha-and-chethu-pre-wedding/10",
+          "widths": [
+            400,
+            900,
+            1600
+          ],
+          "w": 7008,
+          "h": 4672,
+          "ratio": 1.5,
+          "tint": "#30210d",
+          "alt": "10"
+        }
+      ]
+    }
+  ],
+  "site": {
+    "about": [
+      {
+        "id": "photographer-at-work",
+        "base": "resources/site/about/photographer-at-work",
+        "widths": [
+          400,
+          900,
+          1023
+        ],
+        "w": 1023,
+        "h": 1537,
+        "ratio": 0.6656,
+        "tint": "#c5b6b2",
+        "alt": "Photographer At Work"
+      }
+    ],
+    "brand": [
+      {
+        "id": "r-magic-charms-logo",
+        "base": "resources/site/brand/r-magic-charms-logo",
+        "widths": [
+          400,
+          900,
+          1080
+        ],
+        "w": 1080,
+        "h": 1080,
+        "ratio": 1.0,
+        "tint": "#221d0d",
+        "alt": "R Magic Charms Logo"
+      },
+      {
+        "id": "r-magic-charms-mark",
+        "base": "resources/site/brand/r-magic-charms-mark",
+        "widths": [
+          400,
+          700
+        ],
+        "w": 700,
+        "h": 600,
+        "ratio": 1.1667,
+        "tint": "#4f431a",
+        "alt": "R Magic Charms Mark"
+      }
+    ],
+    "editorial": [
+      {
+        "id": "hampi-temple",
+        "base": "resources/site/editorial/hampi-temple",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1920,
+        "h": 1280,
+        "ratio": 1.5,
+        "tint": "#7c7b7e",
+        "alt": "Hampi Temple"
+      },
+      {
+        "id": "mysuru-palace",
+        "base": "resources/site/editorial/mysuru-palace",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1920,
+        "h": 2880,
+        "ratio": 0.6667,
+        "tint": "#87807b",
+        "alt": "Mysuru Palace"
+      },
+      {
+        "id": "western-ghats",
+        "base": "resources/site/editorial/western-ghats",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1920,
+        "h": 1082,
+        "ratio": 1.7745,
+        "tint": "#8d9087",
+        "alt": "Western Ghats"
+      }
+    ],
+    "offerings": [
+      {
+        "id": "couple-shoot",
+        "base": "resources/site/offerings/couple-shoot",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1600,
+        "h": 1104,
+        "ratio": 1.4493,
+        "tint": "#7f7c73",
+        "alt": "Couple Shoot"
+      },
+      {
+        "id": "drone-venue",
+        "base": "resources/site/offerings/drone-venue",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1600,
+        "h": 900,
+        "ratio": 1.7778,
+        "tint": "#7e796a",
+        "alt": "Drone Venue"
+      },
+      {
+        "id": "mehendi",
+        "base": "resources/site/offerings/mehendi",
+        "widths": [
+          400,
+          495
+        ],
+        "w": 495,
+        "h": 619,
+        "ratio": 0.7997,
+        "tint": "#89773c",
+        "alt": "Mehendi"
+      },
+      {
+        "id": "pre-wedding",
+        "base": "resources/site/offerings/pre-wedding",
+        "widths": [
+          400,
+          900,
+          1200
+        ],
+        "w": 1200,
+        "h": 1800,
+        "ratio": 0.6667,
+        "tint": "#6f797d",
+        "alt": "Pre Wedding"
+      },
+      {
+        "id": "reception",
+        "base": "resources/site/offerings/reception",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1800,
+        "h": 1200,
+        "ratio": 1.5,
+        "tint": "#5d5249",
+        "alt": "Reception"
+      },
+      {
+        "id": "south-indian-wedding",
+        "base": "resources/site/offerings/south-indian-wedding",
+        "widths": [
+          400,
+          640
+        ],
+        "w": 640,
+        "h": 640,
+        "ratio": 1.0,
+        "tint": "#9e8473",
+        "alt": "South Indian Wedding"
+      }
+    ],
+    "portfolio": [
+      {
+        "id": "couple-market-moment",
+        "base": "resources/site/portfolio/couple-market-moment",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1800,
+        "h": 1200,
+        "ratio": 1.5,
+        "tint": "#5d5349",
+        "alt": "Couple Market Moment"
+      },
+      {
+        "id": "groom-urban-portrait",
+        "base": "resources/site/portfolio/groom-urban-portrait",
+        "widths": [
+          400,
+          900,
+          1277
+        ],
+        "w": 1277,
+        "h": 1800,
+        "ratio": 0.7094,
+        "tint": "#596565",
+        "alt": "Groom Urban Portrait"
+      },
+      {
+        "id": "intimate-couple-portrait",
+        "base": "resources/site/portfolio/intimate-couple-portrait",
+        "widths": [
+          400,
+          900,
+          1200
+        ],
+        "w": 1200,
+        "h": 1800,
+        "ratio": 0.6667,
+        "tint": "#876f64",
+        "alt": "Intimate Couple Portrait"
+      },
+      {
+        "id": "south-indian-wedding-portrait",
+        "base": "resources/site/portfolio/south-indian-wedding-portrait",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1800,
+        "h": 1200,
+        "ratio": 1.5,
+        "tint": "#898480",
+        "alt": "South Indian Wedding Portrait"
+      },
+      {
+        "id": "urban-couple-story",
+        "base": "resources/site/portfolio/urban-couple-story",
+        "widths": [
+          400,
+          900,
+          1200
+        ],
+        "w": 1200,
+        "h": 1800,
+        "ratio": 0.6667,
+        "tint": "#6f7a7d",
+        "alt": "Urban Couple Story"
+      },
+      {
+        "id": "wedding-blessing-ritual",
+        "base": "resources/site/portfolio/wedding-blessing-ritual",
+        "widths": [
+          400,
+          900,
+          1600
+        ],
+        "w": 1800,
+        "h": 1200,
+        "ratio": 1.5,
+        "tint": "#8a7566",
+        "alt": "Wedding Blessing Ritual"
+      },
+      {
+        "id": "wedding-forehead-blessing",
+        "base": "resources/site/portfolio/wedding-forehead-blessing",
+        "widths": [
+          400,
+          900,
+          1200
+        ],
+        "w": 1200,
+        "h": 1800,
+        "ratio": 0.6667,
+        "tint": "#7b7270",
+        "alt": "Wedding Forehead Blessing"
+      }
+    ]
+  },
+  "video": {
+    "hero-loop": "resources/video/hero-loop.mp4"
+  }
+}
