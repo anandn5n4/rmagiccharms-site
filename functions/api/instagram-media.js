@@ -23,10 +23,14 @@ export async function onRequestGet({ request }) {
   if (range) headers.set("Range", range);
 
   try {
-    let upstream = await fetch(source, {
-      headers,
-      cf: { cacheTtl: 3600, cacheEverything: !range },
-    });
+    // Only successful replies may be cached. Caching a refusal would pin an
+    // empty wall to whichever edge saw it, which is how one device can work
+    // perfectly while another never recovers.
+    const cache = {
+      cacheTtlByStatus: { "200-299": 1800, "300-399": 0, "400-599": 0 },
+      cacheEverything: true,
+    };
+    let upstream = await fetch(source, { headers, cf: range ? undefined : cache });
     // Instagram's mirror refuses a request now and then, and which edge the
     // visitor lands on decides whether they see it. One retry turns that from
     // an empty wall into a brief pause.

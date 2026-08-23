@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Instagram feed diagnostics</title>
+<style>
+  body { font: 14px/1.5 -apple-system, system-ui, sans-serif; background: #111; color: #eee; margin: 0; padding: 16px; }
+  h1 { font-size: 16px; letter-spacing: .1em; text-transform: uppercase; color: #c9a227; }
+  .row { border-bottom: 1px solid #333; padding: 10px 0; }
+  .k { color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+  .v { word-break: break-all; white-space: pre-wrap; }
+  .ok { color: #6ede8a; }
+  .bad { color: #ff6b6b; }
+  video { width: 100%; max-width: 320px; background: #000; margin-top: 8px; }
+  button { background: #c9a227; color: #111; border: 0; padding: 12px 18px; font-weight: 700; margin-top: 16px; }
+</style>
+</head>
+<body>
+<h1>Instagram feed diagnostics</h1>
+<div id="out"></div>
+<button onclick="location.reload()">Run again</button>
+<script>
+const out = document.getElementById("out");
+const FEED = "https://imginn.com/api/posts/?id=70367859285&cursor=";
+const proxy = url => "/api/instagram-media?url=" + encodeURIComponent(url);
+
+function row(key, value, state) {
+  const el = document.createElement("div");
+  el.className = "row";
+  el.innerHTML = '<div class="k"></div><div class="v"></div>';
+  el.querySelector(".k").textContent = key;
+  const v = el.querySelector(".v");
+  v.textContent = String(value);
+  if (state) v.classList.add(state);
+  out.appendChild(el);
+  return v;
+}
+
+async function timed(label, run) {
+  const started = Date.now();
+  try {
+    const result = await run();
+    row(label, result + "  (" + (Date.now() - started) + "ms)", "ok");
+    return result;
+  } catch (error) {
+    row(label, error + "  (" + (Date.now() - started) + "ms)", "bad");
+    return null;
+  }
+}
+
+(async () => {
+  row("User agent", navigator.userAgent);
+  const net = navigator.connection;
+  row("Connection", net ? (net.effectiveType + ", saveData=" + net.saveData) : "unknown");
+  row("Page origin", location.origin);
+
+  await timed("1. /api/instagram", async () => {
+    const r = await fetch("/api/instagram", { headers: { Accept: "application/json" } });
+    const t = await r.text();
+    return r.status + " " + t.slice(0, 120);
+  });
+
+  const feed = await timed("2. Feed through proxy", async () => {
+    const r = await fetch(proxy(FEED), { headers: { Accept: "application/json" } });
+    const t = await r.text();
+    if (!r.ok) throw new Error("HTTP " + r.status + " " + t.slice(0, 200));
+    const d = JSON.parse(t);
+    window.__feed = d;
+    const mine = (d.items || []).filter(i => (i.owner || {}).username === "r_magic_charms");
+    return "HTTP 200 · items=" + (d.items || []).length + " mine=" + mine.length +
+      " reels=" + mine.filter(i => i.isVideo).length;
+  });
+
+  const item = ((window.__feed || {}).items || []).find(i => i.isVideo && i.src);
+  if (!item) { row("3. Reel playback", "no reel in feed to test", "bad"); return; }
+
+  await timed("3. Reel byte-range", async () => {
+    const r = await fetch(proxy(item.src), { headers: { Range: "bytes=0-1" } });
+    return "HTTP " + r.status + " type=" + r.headers.get("Content-Type") +
+      " range=" + r.headers.get("Content-Range");
+  });
+
+  row("4. Reel element", "loading…");
+  const video = document.createElement("video");
+  video.muted = true; video.playsInline = true; video.controls = true; video.preload = "auto";
+  video.src = proxy(item.src);
+  out.appendChild(video);
+  video.addEventListener("loadeddata", () => row("Reel loaded", video.videoWidth + "x" + video.videoHeight, "ok"));
+  video.addEventListener("error", () => row("Reel error", "code " + (video.error && video.error.code), "bad"));
+  video.play().then(() => row("Autoplay", "allowed", "ok"))
+    .catch(e => row("Autoplay", "blocked: " + e.name, "bad"));
+})();
+</script>
+</body>
+</html>
