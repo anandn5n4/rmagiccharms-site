@@ -232,7 +232,7 @@ async function igPage(cursor = "") {
   };
 }
 
-async function instagramPosts() {
+async function instagramPosts(wantAll = false) {
   // The official Graph API is preferred once the studio's token is configured;
   // until then the public feed carries the same posts.
   try {
@@ -252,8 +252,10 @@ async function instagramPosts() {
     let cursor = "";
     let hasNext = true;
     // One page of the public feed mixes in other accounts, so it rarely fills
-    // the twelve-tile wall on its own. A few pages are gathered up front.
-    for (let page = 0; page < 4 && hasNext && collected.length < 12; page += 1) {
+    // the twelve-tile wall on its own. The home preview gathers just enough,
+    // while the archive walks the whole feed so scrolling never waits on it.
+    const enough = () => !wantAll && collected.length >= 12;
+    for (let page = 0; page < 12 && hasNext && !enough(); page += 1) {
       const slice = await igPage(cursor);
       collected.push(...slice.posts);
       cursor = slice.cursor;
@@ -273,7 +275,8 @@ async function populateInstaGrid(page) {
   const moreButton = document.getElementById("instaMore");
   const soundToggle = document.getElementById("reelSoundToggle");
   const status = document.getElementById("instaStatus");
-  const { posts: initialPosts, live, source, cursor, hasNext } = await instagramPosts();
+  const homePreview = page === "home";
+  const { posts: initialPosts, live, source, cursor, hasNext } = await instagramPosts(!homePreview);
   const posts = initialPosts;
   const feed = { cursor: cursor || "", hasNext: Boolean(hasNext), loading: false };
   const liveLabel = live
@@ -281,7 +284,6 @@ async function populateInstaGrid(page) {
     : "Studio media archive";
   if (status) status.textContent = liveLabel;
   const batchSize = 12;
-  const homePreview = page === "home";
   let visibleCount = 0;
   let reelSoundEnabled = false;
 
