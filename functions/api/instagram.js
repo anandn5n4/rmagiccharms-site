@@ -75,7 +75,7 @@ function normalizePublic(item) {
   };
 }
 
-async function publicPosts() {
+async function publicPosts(origin) {
   const posts = [];
   const seen = new Set();
   let cursor = "";
@@ -85,12 +85,10 @@ async function publicPosts() {
       const url = new URL("https://imginn.com/api/posts/");
       url.searchParams.set("id", "70367859285");
       if (cursor) url.searchParams.set("cursor", cursor);
-      const response = await fetch(url.toString(), {
-        headers: {
-          Accept: "application/json",
-          Referer: "https://www.instagram.com/",
-          "User-Agent": "Mozilla/5.0 (compatible; RMagicCharms/1.0)",
-        },
+      const proxy = new URL("/api/instagram-media", origin);
+      proxy.searchParams.set("url", url.toString());
+      const response = await fetch(proxy.toString(), {
+        headers: { Accept: "application/json" },
         cf: { cacheTtl: 600, cacheEverything: true },
       });
       if (!response.ok) throw new Error(`Public Instagram feed returned ${response.status}`);
@@ -116,10 +114,10 @@ async function publicPosts() {
   return posts;
 }
 
-export async function onRequestGet({ env }) {
+export async function onRequestGet({ env, request }) {
   if (!env.INSTAGRAM_USER_ID || !env.INSTAGRAM_ACCESS_TOKEN) {
     try {
-      const posts = await publicPosts();
+      const posts = await publicPosts(new URL(request.url).origin);
       if (!posts.length) return json({ error: "Public Instagram feed returned no media" }, 502);
       return json(
         { posts, source: "public", fetchedAt: new Date().toISOString() },
