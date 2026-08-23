@@ -88,7 +88,7 @@ async function publicPosts() {
       const response = await fetch(url.toString(), {
         headers: {
           Accept: "application/json",
-          Referer: "https://imginn.com/",
+          Referer: "https://www.instagram.com/",
           "User-Agent": "Mozilla/5.0 (compatible; RMagicCharms/1.0)",
         },
         cf: { cacheTtl: 600, cacheEverything: true },
