@@ -370,20 +370,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
 .center-link{padding:0 10.3vw 150px}
 
 /* automatic image upload galleries */
-.uploaded-photo-section{padding:115px 6.5vw 130px;background:var(--paper)}
-.uploaded-photo-section[hidden]{display:none}
-.uploaded-photo-about{background:#efe1c7}
-.uploaded-photo-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:35px;padding-bottom:18px;border-bottom:1px solid var(--line)}
-.uploaded-photo-heading h2{font:400 clamp(42px,5vw,76px)/.92 var(--serif);margin:0}
-.uploaded-photo-heading h2 em{font-weight:300;color:var(--terracotta)}
-.uploaded-photo-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1.3vw}
-.uploaded-photo-grid figure{grid-column:span 6;margin:0}
-.uploaded-photo-grid figure:nth-child(3n+1){grid-column:span 7}
-.uploaded-photo-grid figure:nth-child(3n+2){grid-column:span 5}
-.uploaded-photo-grid img{width:100%;height:min(43vw,610px);object-fit:cover;display:block;filter:saturate(.78) contrast(1.03)}
-.uploaded-photo-grid figure:nth-child(even) img{height:min(35vw,500px)}
-.uploaded-photo-grid figcaption{display:flex;justify-content:space-between;gap:20px;padding:12px 0 28px;font:500 9px var(--mono);letter-spacing:.06em;text-transform:uppercase}
-.uploaded-photo-grid figcaption a{color:var(--muted);border-bottom:1px solid var(--line)}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
@@ -520,12 +506,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   .insta-viewer-caption{display:block;padding-top:14px}
   .insta-viewer-caption a{display:inline-block;margin-top:12px}
   .insta-viewer-close{right:15px;top:12px}
-  .uploaded-photo-section{padding:80px 20px 90px}
-  .uploaded-photo-heading{display:block}
-  .uploaded-photo-heading h2{font-size:46px;margin-top:30px}
-  .uploaded-photo-grid{display:block}
-  .uploaded-photo-grid figure{margin-bottom:25px}
-  .uploaded-photo-grid img,.uploaded-photo-grid figure:nth-child(even) img{height:112vw}
   .music-btn{right:20px;bottom:22px}
   /* hero mobile */
   .hero-badge{width:120px;height:120px;right:20px;top:auto;bottom:100px;transform:none;animation:badgeSpinMob 18s linear infinite}
@@ -661,9 +641,6 @@ h1,h2,h3{text-wrap:balance}
 .selected-work,
 .statement-band,
 .insta-section,
-#homeUploads,
-.uploaded-photo-section,
-.uploaded-photo-about,
 .contact-anchor,
 .philosophy,
 .story-tease,
@@ -728,7 +705,6 @@ h1,h2,h3{text-wrap:balance}
 .project-overlay{color:#fff}
 .project-overlay .eyebrow{color:var(--gold-hi)}
 .project-link{color:var(--gold-hi);border-color:var(--gold-soft)}
-#homeUploads{padding-bottom:var(--section-y)}
 
 /* â”€â”€ 03 Statement — deep ink, ceremonial light â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .statement-band{
@@ -792,16 +768,6 @@ h1,h2,h3{text-wrap:balance}
 .story-tease{background:linear-gradient(150deg,#0A090B,#100D11)}
 .next-project,.ritual-context{background:var(--silk)}
 .philosophy{background:var(--paper)}
-.uploaded-photo-section,.uploaded-photo-about{background:var(--paper);padding:var(--section-y) var(--gutter)}
-.uploaded-photo-heading{border-color:var(--line)}
-.uploaded-photo-heading h2{letter-spacing:-.03em}
-.uploaded-photo-heading h2 em{color:var(--gold-hi)}
-.uploaded-photo-grid img{filter:var(--grade);
-  transition:transform 1.3s var(--ease),filter .6s var(--ease)}
-.uploaded-photo-grid figure{overflow:hidden}
-.uploaded-photo-grid figure:hover img{transform:scale(1.035);filter:saturate(1) contrast(1.04) brightness(.97)}
-.uploaded-photo-grid figcaption{border-color:var(--line);color:var(--muted);letter-spacing:.16em}
-.uploaded-photo-grid figcaption a{color:var(--gold);border-color:var(--gold-soft)}
 
 /* â”€â”€ Contact + forms â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .contact-choice-card{border-color:var(--line);transition:background .35s var(--ease),border-color .35s,transform .35s}
@@ -1060,7 +1026,6 @@ p,li,.split-hero-sub,.enq-hero-sub,.process-list p,.spec-grid p,.promise-grid p,
 
 /* Mono eyebrows and micro-labels were the dullest elements on the page. */
 .eyebrow,.heading-note,.enq-hero-meta span,.stat-band span,
-.uploaded-photo-grid figcaption,.project-location,
 .selected-work .project-location{color:#CFC7BC}
 .eyebrow{opacity:1}
 

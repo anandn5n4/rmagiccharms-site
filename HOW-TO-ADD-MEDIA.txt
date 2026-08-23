@@ -90,6 +90,15 @@ media-src\video\hero-loop.mp4 is the home page loop. It is copied through
 byte-for-byte and never re-compressed, so quality is exactly what you exported.
 Keep it short — it is the heaviest file on the site.
 
+Every OTHER file you drop into media-src\video\ becomes a reel in the social
+wall at the bottom of the home page. Nothing to configure: drop the .mp4 in,
+run media.bat, and it appears. Reels are spread through the wall rather than
+stacked together, and each one borrows the photograph it replaced as its
+still frame, so the tile looks right before it starts playing.
+
+Reels play on hover, without sound until the visitor turns sound on. Export
+them short and vertical, the same way you would for Instagram.
+
 
 --------------------------------------------------------------------------------
  WHAT media.bat ACTUALLY DOES

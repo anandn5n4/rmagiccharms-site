@@ -137,16 +137,54 @@ function pageFrame(kicker, title, copy) {
 }
 
 // Repository-hosted gallery: fast and reliable on static Cloudflare Pages.
-// The first tile plays the studio reel; the rest are real frames from the
-// albums, so nothing here can go stale when a shoot is swapped out.
-const INSTA_POSTS = socialPool().map(({ photo, album }, index) => ({
-  src: photo,
-  alt: `${photo.alt} — ${album.title}`,
-  code: album.slug,
-  // Only the first tile is a reel: it is the one video the site actually ships.
-  isVideo: index === 0 && Boolean(HERO_LOOP),
-  media: index === 0 ? HERO_LOOP : "",
-}));
+// Every video dropped into media-src/video ships as a reel, and every album
+// photograph fills the rest, so nothing here needs editing when a shoot or a
+// reel is added — the manifest is the only source of truth.
+const REELS = Object.entries(MEDIA_DATA.video || {})
+  .sort(([a], [b]) => (a === "hero-loop" ? -1 : b === "hero-loop" ? 1 : a.localeCompare(b)))
+  .map(([id, src]) => ({ id, src }));
+
+// Reels are spread through the wall instead of stacked at the top, so it reads
+// like a feed rather than a video row followed by a block of photographs.
+const REEL_EVERY = 5;
+
+const INSTA_POSTS = (() => {
+  const photos = socialPool();
+  const queue = [...REELS];
+  const posts = [];
+  // A reel takes the slot of the photograph it displaces and borrows it as its
+  // poster, so the tile always has something to show before it starts playing.
+  const reelPost = (reel, { photo, album }) => ({
+    src: photo,
+    alt: `${album.title} — film`,
+    code: album.slug,
+    isVideo: true,
+    media: reel.src,
+  });
+
+  photos.forEach((entry, index) => {
+    if (queue.length && index % REEL_EVERY === 0) {
+      posts.push(reelPost(queue.shift(), entry));
+      return;
+    }
+    posts.push({
+      src: entry.photo,
+      alt: `${entry.photo.alt} — ${entry.album.title}`,
+      code: entry.album.slug,
+      isVideo: false,
+      media: "",
+    });
+  });
+
+  // More films than the spacing could absorb: the remainder still gets shown
+  // rather than silently dropped.
+  queue.forEach((reel, offset) => {
+    if (!photos.length) return;
+    posts.push(reelPost(reel, photos[offset % photos.length]));
+  });
+
+  return posts;
+})();
 
 function populateInstaGrid() {
   const grid = document.getElementById("instaGrid");
@@ -344,7 +382,6 @@ function home() {
         ${projectCard(projects[1])}${projectCard(projects[2])}
       </div>
     </section>
-    <section class="uploaded-photo-section" id="homeUploads" hidden></section>
 
     <!-- STATEMENT -->
     <section class="statement-band">
@@ -611,45 +648,6 @@ function ctaBand(title, copy) {
 }
 
 const IS_LOCAL_PREVIEW = ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
-// Replaces the old folder-scanning gallery. The manifest already knows every
-// photograph and which album it belongs to, so this works identically on the
-// static host instead of only in the local preview server.
-function latestFrames(limit) {
-  const seen = new Set();
-  const frames = [];
-  for (const album of projects) {
-    for (const photo of album.photos) {
-      if (seen.has(photo.base)) continue;
-      seen.add(photo.base);
-      frames.push({ photo, album });
-      if (frames.length >= limit) return frames;
-    }
-  }
-  return frames;
-}
-
-function populateLatestFrames(page) {
-  // Only the home page carries a frames strip. The Studio page tells the
-  // story in words and already sits between the Work archive and the social
-  // grid, so a third photo wall there just repeated the same pictures.
-  const settings = {
-    home: { target: "homeUploads", eyebrow: "NEWLY ADDED", title: "Latest <em>frames</em>", frames: latestFrames(6) },
-  }[page];
-  if (!settings) return;
-
-  const target = document.getElementById(settings.target);
-  if (!target || !settings.frames.length) return;
-
-  target.hidden = false;
-  target.innerHTML = `
-    <div class="uploaded-photo-heading"><p class="eyebrow">${settings.eyebrow}</p><h2>${settings.title}</h2></div>
-    <div class="uploaded-photo-grid">${settings.frames.map(({ photo, album }) => `
-      <figure style="--tint:${photo.tint}">
-        ${image(photo, photo.alt, "", "(max-width: 720px) 46vw, 30vw")}
-        <figcaption><span>${album ? album.title : photo.alt}</span>${album ? `<a href="#story/${album.slug}">${album.type} ↗</a>` : ""}</figcaption>
-      </figure>`).join("")}
-    </div>`;
-}
 
 function enquirySection() {
   const emailLink = brand.email ? `<a href="mailto:${brand.email}">${brand.email}</a>` : "";
@@ -728,7 +726,6 @@ function render() {
     const album = projects.find(p => p.slug === slug) || projects[0];
     if (album) bindGalleryLightbox(album);
   }
-  populateLatestFrames(page);
 }
 
 // The hero loop is by far the heaviest asset on the page. Its poster paints
