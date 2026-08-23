@@ -195,6 +195,32 @@ function populateInstaGrid() {
   let visibleCount = 0;
   let reelSoundEnabled = false;
 
+  // Phones and tablets never fire mouseenter, so on those the reels used to
+  // sit there as still frames and look like ordinary photographs. There they
+  // play themselves whenever they scroll into view instead.
+  const hoverless = window.matchMedia("(hover: none)").matches;
+  const startReel = preview => {
+    grid.querySelectorAll(".insta-preview").forEach(other => {
+      if (other !== preview) other.pause();
+    });
+    if (!preview.src) {
+      preview.src = preview.dataset.src;
+      preview.load();
+    }
+    preview.muted = !reelSoundEnabled;
+    preview.play().catch(() => {});
+  };
+
+  const autoplayInView = hoverless && "IntersectionObserver" in window
+    ? new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const preview = entry.target;
+          if (entry.isIntersecting) startReel(preview);
+          else preview.pause();
+        });
+      }, { threshold: 0.6 })
+    : null;
+
   soundToggle?.addEventListener("click", () => {
     reelSoundEnabled = !reelSoundEnabled;
     soundToggle.classList.toggle("active", reelSoundEnabled);
@@ -213,24 +239,15 @@ function populateInstaGrid() {
       ${p.isVideo
         ? `<video class="insta-preview" muted loop playsinline preload="none" poster="${photoSrc(p.src, 400)}" data-src="${p.media}"></video>`
         : image(p.src, p.alt, "", "(max-width: 720px) 45vw, 300px")}
-      <span class="insta-hover"><b>${p.isVideo ? "▶ Hover to play" : "View moment"}</b><small>${p.isVideo ? "Pauses when you leave" : "Open on this website"}</small></span>
+      <span class="insta-hover"><b>${p.isVideo ? "▶ Film" : "View moment"}</b><small>${p.isVideo ? "Tap to open" : "Open on this website"}</small></span>
     </button>`).join(""));
     const cells = [...grid.querySelectorAll("[data-insta-index]")].slice(startIndex);
     cells.forEach(cell => {
     cell.addEventListener("click", () => openInstaViewer(posts[Number(cell.dataset.instaIndex)]));
     const preview = cell.querySelector(".insta-preview");
     if (preview) {
-      cell.addEventListener("mouseenter", () => {
-        grid.querySelectorAll(".insta-preview").forEach(other => {
-          if (other !== preview) other.pause();
-        });
-        if (!preview.src) {
-          preview.src = preview.dataset.src;
-          preview.load();
-        }
-        preview.muted = !reelSoundEnabled;
-        preview.play().catch(() => {});
-      });
+      if (autoplayInView) autoplayInView.observe(preview);
+      cell.addEventListener("mouseenter", () => startReel(preview));
       cell.addEventListener("mouseleave", () => preview.pause());
     }
   });
@@ -590,8 +607,6 @@ function about() {
       <figure>${image(sitePhoto("editorial", "western-ghats"), "The Western Ghats")}<figcaption>Hill-country shoots</figcaption></figure>
     </div>
   </section>
-
-  <section class="philosophy"><p class="eyebrow">HOW WE WORK</p><ol><li><span>01</span>We listen to your family and traditions.</li><li><span>02</span>We honour every ritual without interruption.</li><li><span>03</span>We preserve each blessing with honesty.</li></ol></section>
 
   <section class="ritual-context">
     <div><p class="eyebrow">ROOTED IN KARNATAKA</p><h2>We understand the meaning<br>before we frame the moment.</h2><p>Naandi begins the festivities with prayer. Arishina brings turmeric, laughter and blessing. Kashi Yatre makes room for playfulness; jeerige bella speaks of sharing life's sweetness and challenges. Through dhaare, saptapadi and the auspicious muhurtha, we work quietly and respectfully around the people who matter most.</p></div>

@@ -315,10 +315,6 @@ footer{background:#3E111C;color:#F3E9DA;padding:0 3.1vw 25px;border-top:1px soli
 .about-portrait>p{font:400 clamp(25px,2.5vw,39px)/1.08 var(--serif);letter-spacing:-.01em;margin:0 0 15px}
 .about-brand-card{background:#000;display:grid;place-items:center;position:relative;overflow:hidden}
 .about-brand-logo{width:100%!important;height:100%!important;object-fit:contain!important;filter:none!important}
-.philosophy{padding:150px 10.3vw;background:var(--bark);color:#F5EDD8;display:grid;grid-template-columns:1fr 2fr}
-.philosophy ol{list-style:none;margin:0;padding:0}
-.philosophy li{border-top:1px solid rgba(196,146,58,.22);padding:20px 0;font:400 clamp(27px,3.5vw,56px)/1 var(--serif);letter-spacing:-.01em}
-.philosophy li span{display:inline-block;width:85px;font:10px var(--mono);letter-spacing:.09em;vertical-align:middle;color:var(--gold)}
 .awards{padding:150px 10.3vw}
 .awards blockquote{max-width:800px;margin:50px 0 0;font:400 clamp(37px,4vw,62px)/1.02 var(--serif);letter-spacing:-.01em}
 .ritual-context{padding:140px 10.3vw;background:var(--silk);display:grid;grid-template-columns:1.3fr .7fr;gap:9vw}
@@ -476,10 +472,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   .about-portrait{display:block;padding:70px 20px 100px}
   .about-portrait>div{height:115vw;margin-bottom:30px}
   .about-portrait>p{font-size:29px}
-  .philosophy{padding:95px 20px;display:block}
-  .philosophy>.eyebrow{margin-bottom:57px}
-  .philosophy li{font-size:31px}
-  .philosophy li span{width:58px;font-size:8px}
   .ritual-context{padding:95px 20px;display:block}
   .ritual-context h2{font-size:45px}
   .ritual-terms{margin-top:60px}
@@ -642,13 +634,12 @@ h1,h2,h3{text-wrap:balance}
 .statement-band,
 .insta-section,
 .contact-anchor,
-.philosophy,
 .story-tease,
 .next-project,
 .ritual-context{position:relative;background:var(--paper);color:var(--bark)}
 
 /* A single hairline between sections keeps the scroll legible */
-.selected-work,.statement-band,.insta-section,.philosophy{border-top:1px solid var(--line)}
+.selected-work,.statement-band,.insta-section{border-top:1px solid var(--line)}
 
 /* Soft champagne light bleeding from alternating corners = depth, not colour */
 .offerings::before,.selected-work::before,.insta-section::before{
@@ -767,7 +758,6 @@ h1,h2,h3{text-wrap:balance}
 .filter-row button.active{color:var(--gold-hi)}
 .story-tease{background:linear-gradient(150deg,#0A090B,#100D11)}
 .next-project,.ritual-context{background:var(--silk)}
-.philosophy{background:var(--paper)}
 
 /* â”€â”€ Contact + forms â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .contact-choice-card{border-color:var(--line);transition:background .35s var(--ease),border-color .35s,transform .35s}
@@ -915,9 +905,6 @@ footer{background:var(--ink);color:var(--bark);border-color:var(--line)}
 .about-portrait{padding:var(--section-y) var(--gutter)}
 .about-portrait>div{height:clamp(360px,44vw,600px)}
 .about-brand-card{background:linear-gradient(168deg,#17161C,#0B0B0E);border:1px solid var(--line)}
-.philosophy{padding:var(--section-y) var(--gutter);background:var(--paper);color:var(--bark)}
-.philosophy li{border-top-color:var(--line)}
-.philosophy li span{color:var(--gold);opacity:.8}
 .ritual-context{padding:var(--section-y) var(--gutter);background:var(--silk)}
 .ritual-terms span{color:var(--gold-hi);opacity:.85}
 
@@ -926,7 +913,6 @@ footer{background:var(--ink);color:var(--bark);border-color:var(--line)}
 }
 @media(max-width:700px){
   .about-portrait{grid-template-columns:1fr;gap:38px}
-  .philosophy,.ritual-context{grid-template-columns:1fr;gap:28px}
   .contact-choice>div,.contact-layout{grid-template-columns:1fr;gap:34px}
   .contact-intro{grid-template-columns:1fr;gap:22px}
   .contact-intro>p:last-child{grid-column:1}
