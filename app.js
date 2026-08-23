@@ -254,9 +254,30 @@ async function igPage(cursor = "", attempt = 0) {
   }
 }
 
+// The snapshot committed by tools/snapshot_instagram.py. Posters are served
+// from this site, so the wall appears identically on every network, and only
+// the reel files themselves are still fetched from Instagram on demand.
+async function igSnapshot() {
+  const response = await fetch("resources/instagram.json", { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`Snapshot returned ${response.status}`);
+  const payload = await response.json();
+  const posts = (payload.posts || []).map(post => ({
+    id: post.id,
+    external: true,
+    isVideo: Boolean(post.isVideo),
+    src: post.poster,
+    poster: post.poster,
+    media: post.isVideo && post.media ? igProxy(post.media) : "",
+    alt: post.alt,
+    likeCount: Number.isFinite(post.likeCount) ? post.likeCount : null,
+    permalink: post.permalink,
+  }));
+  if (!posts.length) throw new Error("Snapshot holds no posts");
+  return posts;
+}
+
 async function instagramPosts(wantAll = false) {
-  // The official Graph API is preferred once the studio's token is configured;
-  // until then the public feed carries the same posts.
+  // The official Graph API is preferred once the studio's token is configured.
   try {
     const controller = new AbortController();
     const deadline = setTimeout(() => controller.abort(), 8000);
@@ -275,13 +296,20 @@ async function instagramPosts(wantAll = false) {
     console.warn("Instagram Graph API unavailable.", error);
   }
 
+  // The snapshot comes before the live mirror deliberately. The mirror answers
+  // differently depending on the region a visitor happens to sit in, so trusting
+  // it first is what made the wall real on one connection and studio media on
+  // the next.
+  try {
+    return { posts: await igSnapshot(), live: true, source: "snapshot" };
+  } catch (error) {
+    console.warn("Instagram snapshot unavailable.", error);
+  }
+
   const collected = [];
   let cursor = "";
   let hasNext = true;
   let failure = null;
-  // One page of the public feed mixes in other accounts, so it rarely fills
-  // the twelve-tile wall on its own. The home preview gathers just enough,
-  // while the archive walks the whole feed so scrolling never waits on it.
   const enough = () => !wantAll && collected.length >= 12;
   for (let page = 0; page < 12 && hasNext && !enough(); page += 1) {
     try {
@@ -291,7 +319,6 @@ async function instagramPosts(wantAll = false) {
       hasNext = slice.hasNext;
     } catch (error) {
       // A later page failing must not throw away the posts already in hand.
-      // A short wall of real work beats none at all.
       failure = error;
       hasNext = false;
     }

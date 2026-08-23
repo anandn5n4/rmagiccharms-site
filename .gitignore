@@ -15,6 +15,7 @@ media-src/**
 !media-src/**/
 !media-src/**/album.json
 !media-src/**/captions.json
+!media-src/site.json
 
 # Video is never re-encoded, so only the published homepage loop is committed.
 *.mp4
@@ -22,4 +23,4 @@ media-src/**
 *.webm
 *.mov
 *.m4v
-!resources/video/hero-loop.mp4!media-src/site.json
+!resources/video/hero-loop.mp4
