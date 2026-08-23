@@ -186,12 +186,14 @@ const INSTA_POSTS = (() => {
   return posts;
 })();
 
-function populateInstaGrid() {
+function populateInstaGrid(page) {
   const grid = document.getElementById("instaGrid");
   if (!grid) return;
   const moreButton = document.getElementById("instaMore");
   const soundToggle = document.getElementById("reelSoundToggle");
   const posts = INSTA_POSTS;
+  const batchSize = 12;
+  const homePreview = page === "home";
   let visibleCount = 0;
   let reelSoundEnabled = false;
 
@@ -239,7 +241,7 @@ function populateInstaGrid() {
       ${p.isVideo
         ? `<video class="insta-preview" muted loop playsinline preload="none" poster="${photoSrc(p.src, 400)}" data-src="${p.media}"></video>`
         : image(p.src, p.alt, "", "(max-width: 720px) 45vw, 300px")}
-      <span class="insta-hover"><b>${p.isVideo ? "▶ Film" : "View moment"}</b><small>${p.isVideo ? "Tap to open" : "Open on this website"}</small></span>
+      <span class="insta-hover"><b>${p.isVideo ? "▶ Film" : "♡ Like"}</b><small>${p.isVideo ? "Tap to open" : "View photograph"}</small></span>
     </button>`).join(""));
     const cells = [...grid.querySelectorAll("[data-insta-index]")].slice(startIndex);
     cells.forEach(cell => {
@@ -256,8 +258,9 @@ function populateInstaGrid() {
   };
 
   grid.innerHTML = "";
-  const loadMore = () => renderPosts(posts.slice(visibleCount, visibleCount + 9));
+  const loadMore = () => renderPosts(posts.slice(visibleCount, visibleCount + batchSize));
   loadMore();
+  if (homePreview) return;
   moreButton?.addEventListener("click", loadMore);
 
   // Keep loading as the visitor scrolls, so the whole archive is reachable
@@ -428,14 +431,37 @@ function home() {
         </div>
       </div>
       <div class="insta-grid" id="instaGrid">
-        ${Array(9).fill(0).map(() => `<div class="insta-cell insta-shimmer"></div>`).join("")}
+        ${Array(12).fill(0).map(() => `<div class="insta-cell insta-shimmer"></div>`).join("")}
       </div>
       <div class="insta-footer">
-        <button type="button" class="big-link insta-more" id="instaMore" hidden><b>View more</b><span>↓</span></button>
+        ${link("social", "View all films &amp; frames <span>↗</span>", "big-link insta-more")}
       </div>
     </section>
 
     `;
+}
+
+function social() {
+  return `
+    ${pageFrame("FILMS & FRAMES", "The social <em>archive.</em>", "Reels and photographs from recent celebrations. New media added to the studio library appears here automatically.")}
+    <section class="insta-section social-archive">
+      <div class="insta-header">
+        <div>
+          <p class="eyebrow">THE COMPLETE WALL</p>
+          <h2>Stories in <em>motion &amp; stills</em></h2>
+        </div>
+        <div class="insta-actions">
+          <button type="button" class="reel-sound-toggle" id="reelSoundToggle" aria-pressed="false"><span>♪</span><b>Enable reel sound</b></button>
+          <a href="https://www.instagram.com/r_magic_charms" target="_blank" rel="noreferrer" class="text-link insta-handle">@r_magic_charms <span>↗</span></a>
+        </div>
+      </div>
+      <div class="insta-grid" id="instaGrid">
+        ${Array(12).fill(0).map(() => `<div class="insta-cell insta-shimmer"></div>`).join("")}
+      </div>
+      <div class="insta-footer">
+        <button type="button" class="big-link insta-more" id="instaMore" hidden><b>Load more</b><span>↓</span></button>
+      </div>
+    </section>`;
 }
 
 function projectCard(project) {
@@ -724,7 +750,7 @@ function render() {
   const route = location.hash.slice(1) || "home";
   const [page, slug] = route.split("/");
   header.classList.toggle("on-light", !["home", "story", "about", "contact"].includes(page));
-  const templates = { home, work, about, contact };
+  const templates = { home, work, social, about, contact };
   app.innerHTML = page === "story" ? story(slug) : (templates[page] ? templates[page]() : notFound());
   document.title = page === "home" ? "R Magic Charms — Wedding Photography" : `${page === "story" ? (projects.find(p => p.slug === slug)?.title || "Story") : page[0].toUpperCase() + page.slice(1)} — R Magic Charms`;
   app.focus({ preventScroll: true });
@@ -735,8 +761,8 @@ function render() {
   if (page === "home") {
     bindHeroVideo();
     bindHeroSound();
-    populateInstaGrid();
   }
+  if (page === "home" || page === "social") populateInstaGrid(page);
   if (page === "story") {
     const album = projects.find(p => p.slug === slug) || projects[0];
     if (album) bindGalleryLightbox(album);

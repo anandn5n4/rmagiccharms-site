@@ -146,7 +146,7 @@ button,input,select,textarea{font:inherit}
 .insta-header h2{font:400 clamp(38px,4.5vw,72px)/.94 var(--serif);letter-spacing:-.02em;margin:12px 0 0}
 .insta-actions{display:flex;align-items:center;gap:22px}
 .insta-handle{font:500 12px var(--display);letter-spacing:.08em;text-transform:uppercase}
-.insta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.insta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .insta-cell{display:block;aspect-ratio:1;overflow:hidden;background:#e3d5bf;position:relative;border:0;padding:0;color:#fff;cursor:pointer;text-align:left}
 .insta-cell img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.82) contrast(1.02);transition:transform .7s cubic-bezier(.22,1,.36,1),filter .4s}
 .insta-cell:hover img{transform:scale(1.04);filter:saturate(1) contrast(1.04)}
@@ -508,7 +508,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
   .insta-header{display:block}
   .insta-actions{margin-top:20px;display:flex;align-items:flex-start;flex-direction:column;gap:16px}
   .insta-handle{display:inline-flex}
-  .insta-grid{grid-template-columns:repeat(3,1fr);gap:3px}
+  .insta-grid{grid-template-columns:repeat(2,1fr);gap:3px}
 }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -735,6 +735,7 @@ h1,h2,h3{text-wrap:balance}
 
 /* â”€â”€ 05 Instagram â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .insta-section{padding-top:var(--section-y)}
+.social-archive{padding-top:clamp(70px,8vw,120px)}
 .insta-section .eyebrow{color:var(--gold)}
 .insta-section .text-link,.insta-section .big-link{color:var(--gold-hi);border-color:var(--gold-soft)}
 .insta-section .insta-header{border-color:var(--line)}
