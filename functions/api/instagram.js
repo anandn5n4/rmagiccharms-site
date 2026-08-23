@@ -81,28 +81,36 @@ async function publicPosts() {
   let cursor = "";
 
   for (let page = 0; page < 10; page += 1) {
-    const url = new URL("https://imginn.com/api/posts/");
-    url.searchParams.set("id", "70367859285");
-    if (cursor) url.searchParams.set("cursor", cursor);
-    const response = await fetch(url.toString(), {
-      headers: {
-        Accept: "application/json",
-        Referer: "https://imginn.com/",
-        "User-Agent": "Mozilla/5.0 (compatible; RMagicCharms/1.0)",
-      },
-      cf: { cacheTtl: 600, cacheEverything: true },
-    });
-    if (!response.ok) throw new Error(`Public Instagram feed returned ${response.status}`);
-    const payload = await response.json();
-    for (const item of payload.items || []) {
-      const post = normalizePublic(item);
-      if (post && !seen.has(post.id)) {
-        seen.add(post.id);
-        posts.push(post);
+    try {
+      const url = new URL("https://imginn.com/api/posts/");
+      url.searchParams.set("id", "70367859285");
+      if (cursor) url.searchParams.set("cursor", cursor);
+      const response = await fetch(url.toString(), {
+        headers: {
+          Accept: "application/json",
+          Referer: "https://imginn.com/",
+          "User-Agent": "Mozilla/5.0 (compatible; RMagicCharms/1.0)",
+        },
+        cf: { cacheTtl: 600, cacheEverything: true },
+      });
+      if (!response.ok) throw new Error(`Public Instagram feed returned ${response.status}`);
+      const payload = await response.json();
+      for (const item of payload.items || []) {
+        const post = normalizePublic(item);
+        if (post && !seen.has(post.id)) {
+          seen.add(post.id);
+          posts.push(post);
+        }
       }
+      cursor = payload.cursor || "";
+      if (!payload.hasNext || !cursor) break;
+    } catch (error) {
+      // Public pagination is best-effort. One stale cursor must not discard the
+      // valid account media collected from all earlier pages.
+      if (!posts.length) throw error;
+      console.warn("Stopped public Instagram pagination after a partial result", error);
+      break;
     }
-    cursor = payload.cursor || "";
-    if (!payload.hasNext || !cursor) break;
   }
 
   return posts;
