@@ -32,10 +32,13 @@ export async function onRequestGet({ request }) {
     }
 
     const responseHeaders = new Headers();
-    for (const name of ["Content-Type", "Content-Length", "Content-Range", "Accept-Ranges"]) {
+    for (const name of ["Content-Type", "Content-Length", "Content-Range"]) {
       const value = upstream.headers.get(name);
       if (value) responseHeaders.set(name, value);
     }
+    // iPhones will not begin a video until the server says it accepts byte
+    // ranges, so this is stated even when the upstream response omits it.
+    responseHeaders.set("Accept-Ranges", "bytes");
     responseHeaders.set("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400");
     responseHeaders.set("X-Content-Type-Options", "nosniff");
     return new Response(upstream.body, {

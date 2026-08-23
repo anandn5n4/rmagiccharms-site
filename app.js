@@ -297,26 +297,46 @@ async function populateInstaGrid(page) {
   // sit there as still frames and look like ordinary photographs. There they
   // play themselves whenever they scroll into view instead.
   const hoverless = window.matchMedia("(hover: none)").matches;
+  let activeReel = null;
+
   const startReel = preview => {
-    grid.querySelectorAll(".insta-preview").forEach(other => {
-      if (other !== preview) other.pause();
-    });
+    if (activeReel === preview) {
+      if (preview.paused) preview.play().catch(() => {});
+      return;
+    }
+    if (activeReel) activeReel.pause();
+    activeReel = preview;
+    // Phones only grant autoplay to a muted, inline video, and the decision is
+    // made when play() is called, so muting comes before the source is loaded.
+    preview.muted = !reelSoundEnabled;
     if (!preview.src) {
       preview.src = preview.dataset.src;
       preview.load();
     }
-    preview.muted = !reelSoundEnabled;
     preview.play().catch(() => {});
   };
 
+  const stopReel = preview => {
+    preview.pause();
+    if (activeReel === preview) activeReel = null;
+  };
+
+  // A phone shows two columns, so several reels clear the threshold together.
+  // Starting every one of them cancels the others mid-play and leaves the wall
+  // frozen, so only the reel closest to the centre of the screen is played.
   const autoplayInView = hoverless && "IntersectionObserver" in window
     ? new IntersectionObserver(entries => {
         entries.forEach(entry => {
-          const preview = entry.target;
-          if (entry.isIntersecting) startReel(preview);
-          else preview.pause();
+          if (!entry.isIntersecting) stopReel(entry.target);
         });
-      }, { threshold: 0.6 })
+        const visible = [...grid.querySelectorAll(".insta-preview")]
+          .map(preview => ({ preview, box: preview.getBoundingClientRect() }))
+          .filter(({ box }) => box.bottom > 0 && box.top < window.innerHeight)
+          .sort((a, b) =>
+            Math.abs(a.box.top + a.box.height / 2 - window.innerHeight / 2) -
+            Math.abs(b.box.top + b.box.height / 2 - window.innerHeight / 2));
+        if (visible.length) startReel(visible[0].preview);
+      }, { threshold: 0.5 })
     : null;
 
   soundToggle?.addEventListener("click", () => {
@@ -354,7 +374,7 @@ async function populateInstaGrid(page) {
     if (preview) {
       if (autoplayInView) autoplayInView.observe(preview);
       cell.addEventListener("mouseenter", () => startReel(preview));
-      cell.addEventListener("mouseleave", () => preview.pause());
+      cell.addEventListener("mouseleave", () => stopReel(preview));
     }
   });
     visibleCount += additions.length;
