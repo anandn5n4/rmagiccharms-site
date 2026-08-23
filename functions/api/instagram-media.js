@@ -23,12 +23,21 @@ export async function onRequestGet({ request }) {
   if (range) headers.set("Range", range);
 
   try {
-    const upstream = await fetch(source, {
+    let upstream = await fetch(source, {
       headers,
       cf: { cacheTtl: 3600, cacheEverything: !range },
     });
+    // Instagram's mirror refuses a request now and then, and which edge the
+    // visitor lands on decides whether they see it. One retry turns that from
+    // an empty wall into a brief pause.
     if (!upstream.ok && upstream.status !== 206) {
-      return new Response("Instagram media unavailable", { status: 502 });
+      upstream = await fetch(source, { headers, cf: { cacheTtl: 0 } });
+    }
+    if (!upstream.ok && upstream.status !== 206) {
+      return new Response(`Instagram media unavailable (${upstream.status})`, {
+        status: 502,
+        headers: { "Cache-Control": "no-store" },
+      });
     }
 
     const responseHeaders = new Headers();

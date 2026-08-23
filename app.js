@@ -226,23 +226,45 @@ const igPost = item => {
 };
 
 // One page of the public feed, read through the same proxy the media uses.
-async function igPage(cursor = "") {
+// A phone on mobile data drops requests far more often than a laptop does, so
+// every page is given a deadline and one second chance before it counts as a
+// failure.
+async function igPage(cursor = "", attempt = 0) {
   const feed = `https://imginn.com/api/posts/?id=${IG_UID}&cursor=${encodeURIComponent(cursor)}`;
-  const response = await fetch(igProxy(feed), { headers: { Accept: "application/json" } });
-  if (!response.ok) throw new Error(`Instagram feed returned ${response.status}`);
-  const payload = await response.json();
-  return {
-    posts: (payload.items || []).map(igPost).filter(Boolean),
-    cursor: payload.cursor || "",
-    hasNext: Boolean(payload.hasNext && payload.cursor),
-  };
+  const controller = new AbortController();
+  const deadline = setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch(igProxy(feed), {
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error(`Instagram feed returned ${response.status}`);
+    const payload = await response.json();
+    return {
+      posts: (payload.items || []).map(igPost).filter(Boolean),
+      cursor: payload.cursor || "",
+      hasNext: Boolean(payload.hasNext && payload.cursor),
+    };
+  } catch (error) {
+    if (attempt >= 1) throw error;
+    await new Promise(resolve => setTimeout(resolve, 800));
+    return igPage(cursor, attempt + 1);
+  } finally {
+    clearTimeout(deadline);
+  }
 }
 
 async function instagramPosts(wantAll = false) {
   // The official Graph API is preferred once the studio's token is configured;
   // until then the public feed carries the same posts.
   try {
-    const response = await fetch("/api/instagram", { headers: { Accept: "application/json" } });
+    const controller = new AbortController();
+    const deadline = setTimeout(() => controller.abort(), 8000);
+    const response = await fetch("/api/instagram", {
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
+    clearTimeout(deadline);
     if (response.ok) {
       const payload = await response.json();
       if (payload.source === "official" && payload.posts?.length) {
@@ -253,26 +275,34 @@ async function instagramPosts(wantAll = false) {
     console.warn("Instagram Graph API unavailable.", error);
   }
 
-  try {
-    const collected = [];
-    let cursor = "";
-    let hasNext = true;
-    // One page of the public feed mixes in other accounts, so it rarely fills
-    // the twelve-tile wall on its own. The home preview gathers just enough,
-    // while the archive walks the whole feed so scrolling never waits on it.
-    const enough = () => !wantAll && collected.length >= 12;
-    for (let page = 0; page < 12 && hasNext && !enough(); page += 1) {
+  const collected = [];
+  let cursor = "";
+  let hasNext = true;
+  let failure = null;
+  // One page of the public feed mixes in other accounts, so it rarely fills
+  // the twelve-tile wall on its own. The home preview gathers just enough,
+  // while the archive walks the whole feed so scrolling never waits on it.
+  const enough = () => !wantAll && collected.length >= 12;
+  for (let page = 0; page < 12 && hasNext && !enough(); page += 1) {
+    try {
       const slice = await igPage(cursor);
       collected.push(...slice.posts);
       cursor = slice.cursor;
       hasNext = slice.hasNext;
+    } catch (error) {
+      // A later page failing must not throw away the posts already in hand.
+      // A short wall of real work beats none at all.
+      failure = error;
+      hasNext = false;
     }
-    if (!collected.length) throw new Error("Instagram feed returned no posts");
-    return { posts: collected, live: true, source: "public", cursor, hasNext };
-  } catch (error) {
-    console.warn("Using the studio media archive because Instagram is unavailable.", error);
-    return { posts: LOCAL_INSTA_POSTS, live: false, source: "local" };
   }
+
+  window.__igError = failure ? String(failure) : null;
+  if (collected.length) {
+    return { posts: collected, live: true, source: "public", cursor, hasNext };
+  }
+  console.warn("Using the studio media archive because Instagram is unavailable.", failure);
+  return { posts: LOCAL_INSTA_POSTS, live: false, source: "local" };
 }
 
 async function populateInstaGrid(page) {
@@ -287,7 +317,7 @@ async function populateInstaGrid(page) {
   const feed = { cursor: cursor || "", hasNext: Boolean(hasNext), loading: false };
   const liveLabel = live
     ? (source === "official" ? "Live via Instagram API" : "Live from Instagram")
-    : "Studio media archive";
+    : "Studio archive · Instagram unreachable";
   if (status) status.textContent = liveLabel;
   const batchSize = 12;
   let visibleCount = 0;
