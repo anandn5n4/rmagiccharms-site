@@ -79,7 +79,7 @@ function pageFrame(kicker, title, copy) {
 
 // Repository-hosted gallery: fast and reliable on static Cloudflare Pages.
 const INSTA_POSTS = [
-  { src: IG.r4, alt: "Wedding ceremony — two lives become one", code: "DSwbF95Eslh" },
+  { src: IG.r4, media: MEDIA.heroLoop, alt: "Wedding ceremony — two lives become one", code: "DSwbF95Eslh", isVideo: true },
   { src: IG.r1, alt: "Pre-wedding portraits — Kavya & Yathish", code: "DVcqXhAE6Iw" },
   { src: IG.r3, alt: "Celebrating life's beautiful moments", code: "DVcqXhAE6Iw" },
   { src: IG.r2, alt: "Candid wedding moments by @r_magic_charms", code: "DZfH9zHS-W6" },
@@ -88,7 +88,7 @@ const INSTA_POSTS = [
   { src: IG.r3, alt: "Jasmine and silk — wedding details", code: "DSwbF95Eslh" },
   { src: IG.r2, alt: "The laughter between the rituals", code: "DSwbF95Eslh" },
   { src: IG.r4, alt: "Golden hour portraits", code: "DSwbF95Eslh" },
-  { src: IG.p1, alt: "A recent celebration by R Magic Charms", code: "static-social-01" },
+  { src: IG.p1, media: MEDIA.heroLoop, alt: "A recent celebration by R Magic Charms", code: "static-social-01", isVideo: true },
   { src: IG.p2, alt: "Newly shared wedding moments", code: "static-social-02" },
   { src: IG.p3, alt: "A story from our recent celebrations", code: "static-social-03" },
   { src: IG.p4, alt: "South Indian wedding moments by R Magic Charms", code: "static-social-04" },
@@ -98,19 +98,49 @@ function populateInstaGrid() {
   const grid = document.getElementById("instaGrid");
   if (!grid) return;
   const moreButton = document.getElementById("instaMore");
+  const soundToggle = document.getElementById("reelSoundToggle");
   const posts = INSTA_POSTS;
   let visibleCount = 0;
+  let reelSoundEnabled = false;
+
+  soundToggle?.addEventListener("click", () => {
+    reelSoundEnabled = !reelSoundEnabled;
+    soundToggle.classList.toggle("active", reelSoundEnabled);
+    soundToggle.setAttribute("aria-pressed", String(reelSoundEnabled));
+    soundToggle.querySelector("span").textContent = reelSoundEnabled ? "♫" : "♪";
+    soundToggle.querySelector("b").textContent = reelSoundEnabled ? "Reel sound on" : "Enable reel sound";
+    grid.querySelectorAll(".insta-preview").forEach(preview => {
+      preview.muted = !reelSoundEnabled;
+    });
+  });
 
   const renderPosts = additions => {
     const startIndex = visibleCount;
     grid.insertAdjacentHTML("beforeend", additions.map((p, offset) => `
-    <button type="button" class="insta-cell" data-insta-index="${startIndex + offset}" aria-label="View photo: ${p.alt}">
-      <img src="${p.src}" alt="${p.alt}" loading="lazy">
-      <span class="insta-hover"><b>View moment</b><small>Open on this website</small></span>
+    <button type="button" class="insta-cell${p.isVideo ? " insta-video" : ""}" data-insta-index="${startIndex + offset}" aria-label="${p.isVideo ? "Play reel" : "View photo"}: ${p.alt}">
+      ${p.isVideo
+        ? `<video class="insta-preview" muted loop playsinline preload="none" poster="${p.src}" data-src="${p.media}"></video>`
+        : `<img src="${p.src}" alt="${p.alt}" loading="lazy">`}
+      <span class="insta-hover"><b>${p.isVideo ? "▶ Hover to play" : "View moment"}</b><small>${p.isVideo ? "Pauses when you leave" : "Open on this website"}</small></span>
     </button>`).join(""));
     const cells = [...grid.querySelectorAll("[data-insta-index]")].slice(startIndex);
     cells.forEach(cell => {
     cell.addEventListener("click", () => openInstaViewer(posts[Number(cell.dataset.instaIndex)]));
+    const preview = cell.querySelector(".insta-preview");
+    if (preview) {
+      cell.addEventListener("mouseenter", () => {
+        grid.querySelectorAll(".insta-preview").forEach(other => {
+          if (other !== preview) other.pause();
+        });
+        if (!preview.src) {
+          preview.src = preview.dataset.src;
+          preview.load();
+        }
+        preview.muted = !reelSoundEnabled;
+        preview.play().catch(() => {});
+      });
+      cell.addEventListener("mouseleave", () => preview.pause());
+    }
   });
     visibleCount += additions.length;
     if (moreButton) moreButton.hidden = visibleCount >= posts.length;
@@ -124,21 +154,25 @@ function populateInstaGrid() {
 }
 
 function openInstaViewer(post) {
+  document.querySelectorAll(".insta-preview").forEach(preview => preview.pause());
   const viewer = document.createElement("div");
   viewer.className = "insta-viewer";
   viewer.setAttribute("role", "dialog");
   viewer.setAttribute("aria-modal", "true");
-  viewer.setAttribute("aria-label", "Instagram photo viewer");
+  viewer.setAttribute("aria-label", post.isVideo ? "Instagram reel player" : "Instagram photo viewer");
   viewer.innerHTML = `
     <button class="insta-viewer-close" type="button" aria-label="Close">×</button>
     <div class="insta-viewer-content">
-      <img src="${post.src}" alt="${post.alt}">
+      ${post.isVideo
+        ? `<video controls autoplay playsinline poster="${post.src}"><source src="${post.media}" type="video/mp4"></video>`
+        : `<img src="${post.src}" alt="${post.alt}">`}
       <div class="insta-viewer-caption">
         <p>${post.alt}</p>
       </div>
     </div>`;
   document.body.appendChild(viewer);
   const close = () => {
+    viewer.querySelector("video")?.pause();
     viewer.remove();
     document.removeEventListener("keydown", onKeydown);
   };
@@ -150,9 +184,12 @@ function openInstaViewer(post) {
 
 function home() {
   return `
-    <section class="hero hero-photo">
-      <div class="hero-image-wrap">
-        ${image("resources/uploads/portfolio/south-indian-wedding-portrait.jpg", "South Indian wedding portrait by R Magic Charms", "hero-image eager")}
+    <section class="hero hero-video">
+      <div class="hero-video-wrap">
+        <video class="hero-vid" autoplay muted loop playsinline preload="metadata" poster="${projects[0].image}">
+          <source src="${MEDIA.heroLoop}" type="video/mp4">
+        </video>
+        <div class="hero-video-overlay"></div>
       </div>
       <!-- Animated circle badge (like WeddingBells) -->
       <div class="hero-badge" aria-hidden="true">
@@ -168,7 +205,10 @@ function home() {
       <div class="hero-copy">
         <p class="hero-small">SACRED RITUALS · FAMILY BLESSINGS · AUSPICIOUS BEGINNINGS</p>
         <h1>Two families.<br><em>One blessed beginning.</em></h1>
-        <div class="hero-actions"><a class="hero-cta" href="#contact">Share your wedding story</a></div>
+        <div class="hero-actions">
+          <a class="hero-cta" href="#contact">Share your wedding story</a>
+          <button class="hero-sound-toggle" id="heroSoundToggle" type="button" aria-pressed="false"><span>▶</span><b>Play film sound</b></button>
+        </div>
       </div>
       <a class="scroll-note" href="#offerings">SCROLL <span>↓</span></a>
       <div class="hero-side-note">NALANGU · HALDI · MEHENDI<br>MUHURTHAM · SANGEET · RECEPTION</div>
@@ -263,6 +303,7 @@ function home() {
           <h2>Recent <em>celebrations</em></h2>
         </div>
         <div class="insta-actions">
+          <button type="button" class="reel-sound-toggle" id="reelSoundToggle" aria-pressed="false"><span>♪</span><b>Enable reel sound</b></button>
           <a href="https://www.instagram.com/r_magic_charms" target="_blank" rel="noreferrer" class="text-link insta-handle">@r_magic_charms <span>↗</span></a>
         </div>
       </div>
@@ -536,8 +577,33 @@ function render() {
   observeReveals();
   bindForm();
   bindFilters();
+  if (page === "home") bindHeroSound();
   if (page === "home") populateInstaGrid();
   if (["home", "about", "contact", "work"].includes(page)) populateUploadedImages(page);
+}
+
+function syncHeroSoundButton(video, button) {
+  const playingSound = !video.muted;
+  button.classList.toggle("active", playingSound);
+  button.setAttribute("aria-pressed", String(playingSound));
+  button.querySelector("span").textContent = playingSound ? "♫" : "▶";
+  button.querySelector("b").textContent = playingSound ? "Film sound on" : "Play film sound";
+}
+
+function bindHeroSound() {
+  const video = document.querySelector(".hero-vid");
+  const button = document.getElementById("heroSoundToggle");
+  if (!video || !button) return;
+
+  button.addEventListener("click", async () => {
+    video.muted = !video.muted;
+    video.volume = 0.8;
+    await video.play().catch(() => {
+      video.muted = true;
+    });
+    syncHeroSoundButton(video, button);
+  });
+  syncHeroSoundButton(video, button);
 }
 
 function observeReveals() {

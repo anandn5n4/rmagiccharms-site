@@ -19,6 +19,7 @@ const MEDIA = {
   westernGhats: "resources/editorial/western-ghats.jpg",
   mysuruPalace: "resources/editorial/mysuru-palace.jpg",
   hampiTemple: "resources/editorial/hampi-temple.jpg",
+  heroLoop: "resources/web/hero-loop.mp4",
   instagram1: "resources/uploads/portfolio/couple-market-moment.jpg",
   instagram2: "resources/uploads/portfolio/groom-urban-portrait.jpg",
   instagram3: "resources/uploads/portfolio/intimate-couple-portrait.jpg",

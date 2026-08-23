@@ -15,6 +15,8 @@ Thumbs.db
 *.mov
 *.m4v
 resources/web/
+!resources/web/
+!resources/web/hero-loop.mp4
 
 # Additional source masters
 resources/source/

@@ -18,7 +18,8 @@ local endpoints are unavailable.
 - Build command: leave empty
 - Build output directory: `/`
 
-The website is photography-only and contains no large playback assets.
+The site keeps one optimized 20-second homepage loop. Other large playback
+assets and source masters are excluded.
 
 ## Updating content
 
@@ -27,6 +28,7 @@ The website is photography-only and contains no large playback assets.
 - Theme and layout: `styles.css`
 - Portfolio images: `resources/uploads/portfolio/`
 - Studio images: `resources/uploads/about/`
+- Homepage and hover-preview loop: `resources/web/hero-loop.mp4`
 
 See `HOW-TO-ADD-MEDIA.txt` for the media-folder conventions used by the local
 preview server.
