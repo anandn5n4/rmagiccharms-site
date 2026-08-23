@@ -190,15 +190,69 @@ const escapeHtml = value => String(value || "").replace(/[&<>"']/g, character =>
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
 })[character]);
 
+const IG_HANDLE = "r_magic_charms";
+const IG_UID = "70367859285";
+// Instagram's CDN refuses hot-linking, so every file is pulled through the
+// studio's own restricted proxy rather than embedded directly.
+const igProxy = url => `/api/instagram-media?url=${encodeURIComponent(url)}`;
+
+const igCount = value => {
+  if (Number.isFinite(value)) return value >= 0 ? value : null;
+  const match = String(value || "").trim().toLowerCase().match(/^([\d.]+)([km])?$/);
+  if (!match) return null;
+  return Math.round(Number(match[1]) * (match[2] === "m" ? 1e6 : match[2] === "k" ? 1e3 : 1));
+};
+
+const igPost = item => {
+  if (item.owner?.username !== IG_HANDLE || !item.src || !item.thumb) return null;
+  return {
+    id: item.id || item.code,
+    external: true,
+    isVideo: Boolean(item.isVideo),
+    src: igProxy(item.thumb),
+    poster: igProxy(item.thumb),
+    media: item.isVideo ? igProxy(item.src) : "",
+    alt: (item.alt || "").replace(/#\S+/g, "").replace(/@\S+/g, "").trim().slice(0, 140)
+      || (item.isVideo ? "Reel by R Magic Charms" : "Photograph by R Magic Charms"),
+    likeCount: igCount(item.likeCount),
+    permalink: `https://www.instagram.com/${item.isVideo ? "reel" : "p"}/${item.code}/`,
+  };
+};
+
+// One page of the public feed, read through the same proxy the media uses.
+async function igPage(cursor = "") {
+  const feed = `https://imginn.com/api/posts/?id=${IG_UID}&cursor=${encodeURIComponent(cursor)}`;
+  const response = await fetch(igProxy(feed), { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error(`Instagram feed returned ${response.status}`);
+  const payload = await response.json();
+  return {
+    posts: (payload.items || []).map(igPost).filter(Boolean),
+    cursor: payload.cursor || "",
+    hasNext: Boolean(payload.hasNext && payload.cursor),
+  };
+}
+
 async function instagramPosts() {
+  // The official Graph API is preferred once the studio's token is configured;
+  // until then the public feed carries the same posts.
   try {
     const response = await fetch("/api/instagram", { headers: { Accept: "application/json" } });
-    if (!response.ok) throw new Error(`Instagram API returned ${response.status}`);
-    const payload = await response.json();
-    if (!Array.isArray(payload.posts) || !payload.posts.length) throw new Error("Instagram API returned no media");
-    return { posts: payload.posts, live: true, source: payload.source };
+    if (response.ok) {
+      const payload = await response.json();
+      if (payload.source === "official" && payload.posts?.length) {
+        return { posts: payload.posts, live: true, source: "official" };
+      }
+    }
   } catch (error) {
-    console.warn("Using the studio media archive because live Instagram media is unavailable.", error);
+    console.warn("Instagram Graph API unavailable.", error);
+  }
+
+  try {
+    const first = await igPage();
+    if (!first.posts.length) throw new Error("Instagram feed returned no posts");
+    return { posts: first.posts, live: true, source: "public", cursor: first.cursor, hasNext: first.hasNext };
+  } catch (error) {
+    console.warn("Using the studio media archive because Instagram is unavailable.", error);
     return { posts: LOCAL_INSTA_POSTS, live: false, source: "local" };
   }
 }
@@ -209,10 +263,13 @@ async function populateInstaGrid(page) {
   const moreButton = document.getElementById("instaMore");
   const soundToggle = document.getElementById("reelSoundToggle");
   const status = document.getElementById("instaStatus");
-  const { posts, live, source } = await instagramPosts();
-  if (status) status.textContent = live
-    ? (source === "official" ? "Live via Instagram API" : "Live from public Instagram")
+  const { posts: initialPosts, live, source, cursor, hasNext } = await instagramPosts();
+  const posts = initialPosts;
+  const feed = { cursor: cursor || "", hasNext: Boolean(hasNext), loading: false };
+  const liveLabel = live
+    ? (source === "official" ? "Live via Instagram API" : "Live from Instagram")
     : "Studio media archive";
+  if (status) status.textContent = liveLabel;
   const batchSize = 12;
   const homePreview = page === "home";
   let visibleCount = 0;
@@ -283,12 +340,32 @@ async function populateInstaGrid(page) {
     }
   });
     visibleCount += additions.length;
-    if (moreButton) moreButton.hidden = visibleCount >= posts.length;
+    if (moreButton) moreButton.hidden = visibleCount >= posts.length && !feed.hasNext;
+  };
+
+  // The public feed is cursor paged, so the archive pulls the next slice from
+  // Instagram only once the already-loaded posts have been shown.
+  const loadMore = async () => {
+    if (visibleCount >= posts.length && feed.hasNext && !feed.loading) {
+      feed.loading = true;
+      if (status) status.textContent = "Loading more from Instagram…";
+      try {
+        const next = await igPage(feed.cursor);
+        posts.push(...next.posts);
+        feed.cursor = next.cursor;
+        feed.hasNext = next.hasNext;
+      } catch (error) {
+        console.warn("Could not load more Instagram posts.", error);
+        feed.hasNext = false;
+      }
+      feed.loading = false;
+      if (status) status.textContent = liveLabel;
+    }
+    renderPosts(posts.slice(visibleCount, visibleCount + batchSize));
   };
 
   grid.innerHTML = "";
-  const loadMore = () => renderPosts(posts.slice(visibleCount, visibleCount + batchSize));
-  loadMore();
+  await loadMore();
   if (homePreview) return;
   moreButton?.addEventListener("click", loadMore);
 
@@ -298,11 +375,11 @@ async function populateInstaGrid(page) {
   if (moreButton && "IntersectionObserver" in window) {
     const observer = new IntersectionObserver(entries => {
       if (!entries.some(entry => entry.isIntersecting)) return;
-      if (visibleCount >= posts.length) {
+      if (visibleCount >= posts.length && !feed.hasNext) {
         observer.disconnect();
         return;
       }
-      loadMore();
+      if (!feed.loading) loadMore();
     }, { rootMargin: "600px 0px" });
     observer.observe(moreButton);
   }

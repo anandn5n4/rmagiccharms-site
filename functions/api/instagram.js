@@ -51,83 +51,11 @@ function count(value) {
   return result >= 0 ? result : null;
 }
 
-function mediaProxy(source) {
-  return `/api/instagram-media?url=${encodeURIComponent(source)}`;
-}
-
-function normalizePublic(item) {
-  if (item.owner?.username !== "r_magic_charms" || !item.src || !item.thumb) return null;
-  const isVideo = Boolean(item.isVideo);
-  return {
-    id: item.id || item.code,
-    external: true,
-    isVideo,
-    src: mediaProxy(item.thumb),
-    poster: mediaProxy(item.thumb),
-    media: isVideo ? mediaProxy(item.src) : "",
-    alt: (item.alt || (isVideo ? "Instagram reel" : "Instagram photograph")).slice(0, 240),
-    likeCount: count(item.likeCount),
-    commentsCount: count(item.commentCount),
-    permalink: item.code
-      ? `https://www.instagram.com/${isVideo ? "reel" : "p"}/${item.code}/`
-      : "https://www.instagram.com/r_magic_charms/",
-    timestamp: item.date || "",
-  };
-}
-
-async function publicPosts(origin) {
-  const posts = [];
-  const seen = new Set();
-  let cursor = "";
-
-  for (let page = 0; page < 10; page += 1) {
-    try {
-      const url = new URL("https://imginn.com/api/posts/");
-      url.searchParams.set("id", "70367859285");
-      if (cursor) url.searchParams.set("cursor", cursor);
-      const proxy = new URL("/api/instagram-media", origin);
-      proxy.searchParams.set("url", url.toString());
-      const response = await fetch(proxy.toString(), {
-        headers: { Accept: "application/json" },
-        cf: { cacheTtl: 600, cacheEverything: true },
-      });
-      if (!response.ok) throw new Error(`Public Instagram feed returned ${response.status}`);
-      const payload = await response.json();
-      for (const item of payload.items || []) {
-        const post = normalizePublic(item);
-        if (post && !seen.has(post.id)) {
-          seen.add(post.id);
-          posts.push(post);
-        }
-      }
-      cursor = payload.cursor || "";
-      if (!payload.hasNext || !cursor) break;
-    } catch (error) {
-      // Public pagination is best-effort. One stale cursor must not discard the
-      // valid account media collected from all earlier pages.
-      if (!posts.length) throw error;
-      console.warn("Stopped public Instagram pagination after a partial result", error);
-      break;
-    }
-  }
-
-  return posts;
-}
-
-export async function onRequestGet({ env, request }) {
+export async function onRequestGet({ env }) {
+  // Without the studio's Graph API credentials the browser falls back to the
+  // public feed, so this answers plainly instead of failing.
   if (!env.INSTAGRAM_USER_ID || !env.INSTAGRAM_ACCESS_TOKEN) {
-    try {
-      const posts = await publicPosts(new URL(request.url).origin);
-      if (!posts.length) return json({ error: "Public Instagram feed returned no media" }, 502);
-      return json(
-        { posts, source: "public", fetchedAt: new Date().toISOString() },
-        200,
-        "public, max-age=300, s-maxage=600, stale-while-revalidate=3600",
-      );
-    } catch (error) {
-      console.error("Public Instagram request failed", error);
-      return json({ error: "Instagram could not be reached" }, 502);
-    }
+    return json({ posts: [], source: "unconfigured" }, 200, "public, max-age=300");
   }
 
   const version = env.INSTAGRAM_API_VERSION || "v25.0";

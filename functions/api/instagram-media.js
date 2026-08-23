@@ -1,4 +1,4 @@
-const ALLOWED_HOSTS = ["imginn.com", "cdninstagram.com"];
+const ALLOWED_HOSTS = ["imginn.com", "cdninstagram.com", "fbcdn.net"];
 
 function allowed(source) {
   try {
