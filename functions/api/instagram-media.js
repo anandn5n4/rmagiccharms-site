@@ -45,7 +45,13 @@ export async function onRequestGet({ request }) {
     }
 
     const responseHeaders = new Headers();
-    for (const name of ["Content-Type", "Content-Length", "Content-Range"]) {
+    // Content-Length is deliberately not copied. Instagram's mirror serves the
+    // feed gzipped and the runtime hands us the decompressed body, so passing
+    // the original length on describes a body that no longer exists and the
+    // edge rejects the whole response as invalid. Whether the mirror compresses
+    // at all varies between locations, which is why this struck phones and left
+    // laptops alone.
+    for (const name of ["Content-Type", "Content-Range"]) {
       const value = upstream.headers.get(name);
       if (value) responseHeaders.set(name, value);
     }
