@@ -33,11 +33,13 @@ const projects = MEDIA_DATA.albums
   }));
 
 // Drawn from the albums themselves rather than a fixed list, so the social
-// grid keeps working as shoots are added and removed.
+// grid keeps working as shoots are added and removed. Albums are interleaved
+// so the grid opens with a spread of work rather than one whole wedding.
 const socialPool = () => {
   const pool = [];
   const albums = MEDIA_DATA.albums.filter(a => a.listed !== false && a.photos.length);
-  for (let depth = 0; pool.length < 24 && depth < 8; depth += 1) {
+  const deepest = Math.max(0, ...albums.map(a => a.photos.length));
+  for (let depth = 0; depth < deepest; depth += 1) {
     for (const album of albums) {
       const photo = album.photos[depth];
       if (photo) pool.push({ photo, album });
@@ -199,10 +201,24 @@ function populateInstaGrid() {
   };
 
   grid.innerHTML = "";
-  renderPosts(posts.slice(0, 9));
-  moreButton?.addEventListener("click", () => {
-    renderPosts(posts.slice(visibleCount, visibleCount + 9));
-  });
+  const loadMore = () => renderPosts(posts.slice(visibleCount, visibleCount + 9));
+  loadMore();
+  moreButton?.addEventListener("click", loadMore);
+
+  // Keep loading as the visitor scrolls, so the whole archive is reachable
+  // without repeated clicking. The button stays as the fallback and as the
+  // signal that there is more to see.
+  if (moreButton && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      if (visibleCount >= posts.length) {
+        observer.disconnect();
+        return;
+      }
+      loadMore();
+    }, { rootMargin: "600px 0px" });
+    observer.observe(moreButton);
+  }
 }
 
 function openInstaViewer(post) {
@@ -538,8 +554,6 @@ function about() {
     </div>
   </section>
 
-  <section class="uploaded-photo-section uploaded-photo-about" id="aboutUploads" hidden></section>
-
   <section class="philosophy"><p class="eyebrow">HOW WE WORK</p><ol><li><span>01</span>We listen to your family and traditions.</li><li><span>02</span>We honour every ritual without interruption.</li><li><span>03</span>We preserve each blessing with honesty.</li></ol></section>
 
   <section class="ritual-context">
@@ -615,12 +629,11 @@ function latestFrames(limit) {
 }
 
 function populateLatestFrames(page) {
+  // Only the home page carries a frames strip. The Studio page tells the
+  // story in words and already sits between the Work archive and the social
+  // grid, so a third photo wall there just repeated the same pictures.
   const settings = {
     home: { target: "homeUploads", eyebrow: "NEWLY ADDED", title: "Latest <em>frames</em>", frames: latestFrames(6) },
-    about: {
-      target: "aboutUploads", eyebrow: "THE CRAFT", title: "Behind the <em>frame</em>",
-      frames: siteGroup("editorial").map(photo => ({ photo, album: null })),
-    },
   }[page];
   if (!settings) return;
 
