@@ -32,16 +32,25 @@ const projects = MEDIA_DATA.albums
     className: shapeOf(album.cover),
   }));
 
-const IG = {
-  p1: sitePhoto("portfolio", "couple-market-moment"),
-  p2: sitePhoto("portfolio", "groom-urban-portrait"),
-  p3: sitePhoto("portfolio", "intimate-couple-portrait"),
-  p4: sitePhoto("portfolio", "wedding-blessing-ritual"),
-  r1: signature("hills-embrace"),
-  r2: signature("together-in-the-hills"),
-  r3: signature("pre-wedding-portrait"),
-  r4: signature("two-lives-become-one"),
-  r5: signature("rituals-and-details"),
+// Drawn from the albums themselves rather than a fixed list, so the social
+// grid keeps working as shoots are added and removed.
+const socialPool = () => {
+  const pool = [];
+  const albums = MEDIA_DATA.albums.filter(a => a.listed !== false && a.photos.length);
+  for (let depth = 0; pool.length < 24 && depth < 8; depth += 1) {
+    for (const album of albums) {
+      const photo = album.photos[depth];
+      if (photo) pool.push({ photo, album });
+    }
+  }
+  return pool;
+};
+
+// A stable pick from the published work, used where the layout wants one strong
+// photograph rather than a specific named file.
+const featuredPhoto = index => {
+  const pool = socialPool();
+  return pool.length ? pool[index % pool.length].photo : null;
 };
 
 const app = document.querySelector("#app");
@@ -83,7 +92,6 @@ function renderHeader() {
       <nav id="primary-nav" aria-label="Main navigation">
         ${link("work", "Work")}
         ${link("about", "Studio")}
-        ${link("contact", "Enquiries")}
         ${link("contact", "Check availability", "nav-cta")}
       </nav>
     </div>`;
@@ -127,21 +135,16 @@ function pageFrame(kicker, title, copy) {
 }
 
 // Repository-hosted gallery: fast and reliable on static Cloudflare Pages.
-const INSTA_POSTS = [
-  { src: IG.r4, media: HERO_LOOP, alt: "Wedding ceremony — two lives become one", code: "DSwbF95Eslh", isVideo: true },
-  { src: IG.r1, alt: "Pre-wedding portraits — Kavya & Yathish", code: "DVcqXhAE6Iw" },
-  { src: IG.r3, alt: "Celebrating life's beautiful moments", code: "DVcqXhAE6Iw" },
-  { src: IG.r2, alt: "Candid wedding moments by @r_magic_charms", code: "DZfH9zHS-W6" },
-  { src: IG.r1, alt: "Misty hills — pre-wedding portraits", code: "DVcqXhAE6Iw" },
-  { src: IG.r5, alt: "South Indian wedding traditions", code: "DSwbF95Eslh" },
-  { src: IG.r3, alt: "Jasmine and silk — wedding details", code: "DSwbF95Eslh" },
-  { src: IG.r2, alt: "The laughter between the rituals", code: "DSwbF95Eslh" },
-  { src: IG.r4, alt: "Golden hour portraits", code: "DSwbF95Eslh" },
-  { src: IG.p1, media: HERO_LOOP, alt: "A recent celebration by R Magic Charms", code: "static-social-01", isVideo: true },
-  { src: IG.p2, alt: "Newly shared wedding moments", code: "static-social-02" },
-  { src: IG.p3, alt: "A story from our recent celebrations", code: "static-social-03" },
-  { src: IG.p4, alt: "South Indian wedding moments by R Magic Charms", code: "static-social-04" },
-];
+// The first tile plays the studio reel; the rest are real frames from the
+// albums, so nothing here can go stale when a shoot is swapped out.
+const INSTA_POSTS = socialPool().map(({ photo, album }, index) => ({
+  src: photo,
+  alt: `${photo.alt} — ${album.title}`,
+  code: album.slug,
+  // Only the first tile is a reel: it is the one video the site actually ships.
+  isVideo: index === 0 && Boolean(HERO_LOOP),
+  media: index === 0 ? HERO_LOOP : "",
+}));
 
 function populateInstaGrid() {
   const grid = document.getElementById("instaGrid");
@@ -337,7 +340,7 @@ function home() {
       </div>
       <div class="statement-visual" aria-hidden="true">
         <div class="statement-rings"></div>
-        <div class="statement-arch">${image(IG.r4, "Auspicious South Indian wedding ceremony")}</div>
+        <div class="statement-arch">${image(featuredPhoto(1), "Auspicious South Indian wedding ceremony")}</div>
         <p>RITUAL · BLESSING · UNION</p>
       </div>
     </section>
@@ -379,22 +382,10 @@ function projectCard(project) {
   </article>`;
 }
 
-// Filters are derived from the albums that actually exist, so a ceremony only
-// appears once there is work to show behind it.
-const FILTER_LABELS = {
-  "pre-wedding": "Pre-wedding",
-  "nalangu-haldi": "Nalangu &amp; Haldi",
-  "muhurtham": "Muhurtham",
-  "sangeet-reception": "Sangeet &amp; Reception",
-};
-
 function work() {
-  const used = [...new Set(projects.map(p => p.filter))].filter(f => f && f !== "all");
-  const buttons = [`<button class="active" data-filter="all">All stories</button>`]
-    .concat(used.map(f => `<button data-filter="${f}">${FILTER_LABELS[f] || f.replace(/-/g, " ")}</button>`));
-
+  const frames = projects.reduce((total, project) => total + project.photos.length, 0);
   return `${pageFrame("THE WEDDING ARCHIVE / 2019—NOW", "Tradition, joy and<br><em>blessed beginnings.</em>", "Nalangu laughter, turmeric in the morning sun, intricate mehendi, the sacred muhurtham and generations gathered in blessing. Every wedding is preserved as one complete family story.")}
-  <section class="filter-row" aria-label="Filter wedding stories">${buttons.join("")}</section>
+  <section class="archive-meta reveal"><span>${projects.length} ${projects.length === 1 ? "story" : "stories"}</span><i></i><span>${frames} frames</span><i></i><span>Newest first</span></section>
   <section class="work-grid">${projects.map(projectCard).join("")}</section>`;
 }
 
@@ -651,7 +642,6 @@ function enquirySection() {
   const emailLink = brand.email ? `<a href="mailto:${brand.email}">${brand.email}</a>` : "";
   return `
   <section class="contact-anchor" id="enquiry">
-    <div class="contact-intro"><p class="eyebrow">STUDIO &amp; ENQUIRIES</p><h2>Tell us about your<br><em>auspicious celebration.</em></h2><p>Share your dates, traditions, ceremonies and the families gathering to bless your new beginning. We respond personally and guide you through the next steps.</p></div>
     <section class="contact-choice"><p class="eyebrow">CHOOSE HOW TO REACH US</p><div><a class="contact-choice-card" href="https://wa.me/${brand.phoneDigits}?text=${encodeURIComponent("Namaste R Magic Charms, we are planning our wedding and would like to discuss photography.")}" target="_blank" rel="noreferrer"><span>01</span><h2>Speak with us</h2><p>Tell us about your celebration and the traditions important to your family.</p><b>Open WhatsApp ↗</b></a><button type="button" class="contact-choice-card" data-scroll-inquiry><span>02</span><h2>Share the details</h2><p>Send your ceremonies, dates and location as one formal wedding inquiry.</p><b>Fill the form ↓</b></button></div></section>
     <section class="contact-layout"><form id="inquiry-form" novalidate><label>Your name<input name="name" autocomplete="name" required placeholder="Bride, groom or family contact" /></label><label>Mobile number<input name="phone" type="tel" autocomplete="tel" required placeholder="+91 98765 43210" /></label><label>Email address (optional)<input name="email" type="email" autocomplete="email" placeholder="you@example.com" /></label><label>What are we celebrating?<select name="kind"><option>Complete wedding celebration</option><option>Pre-Wedding</option><option>Engagement</option><option>Haldi or Mehendi</option><option>Wedding or Muhurtham</option><option>Reception</option><option>Couple or portrait shoot</option><option>Post-Wedding</option><option>We would like your guidance</option></select></label><label>Event date and location<input name="event" required placeholder="12 December 2026, Bengaluru" /></label><label>Tell us about the ceremonies<textarea name="message" required placeholder="Traditions, rituals, number of days and the moments important to your family…"></textarea></label><button type="submit" class="submit-button">Review &amp; send on WhatsApp <span>↗</span></button><p class="form-note">Submitting opens WhatsApp with your details. Review the message and tap Send so your inquiry reaches R Magic Charms directly.</p><p class="form-status" aria-live="polite"></p></form><aside><figure class="aside-photo">${image(sitePhoto("portfolio", "intimate-couple-portrait"), "A quiet moment between a couple")}</figure><p class="eyebrow">R MAGIC CHARMS</p><a href="tel:+${brand.phoneDigits}">${brand.phoneDisplay}</a>${emailLink}<p><a href="${brand.mapUrl}" target="_blank" rel="noreferrer">${brand.location} ↗</a><br>Available across India and worldwide</p><div><a href="https://wa.me/${brand.phoneDigits}" target="_blank" rel="noreferrer">Formal WhatsApp enquiry ↗</a><a href="https://www.instagram.com/${brand.instagram}" target="_blank" rel="noreferrer">@${brand.instagram} ↗</a></div></aside></section>
   </section>`;

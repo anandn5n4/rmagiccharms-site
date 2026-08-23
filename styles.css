@@ -1263,3 +1263,16 @@ body.lightbox-open { overflow: hidden; }
   .gallery-justified figure:hover img { transform: none; }
   .lightbox { animation: none; }
 }
+
+/* One archive instead of ceremony filters: a quiet line of context that the
+   photographer never has to maintain, because it counts itself. */
+.archive-meta {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: 14px; margin: 0 auto 46px; padding: 0 24px;
+  font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; opacity: .5;
+}
+.archive-meta i { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .6; }
+
+@media (max-width: 720px) {
+  .archive-meta { gap: 10px; margin-bottom: 32px; font-size: .64rem; letter-spacing: .14em; }
+}
