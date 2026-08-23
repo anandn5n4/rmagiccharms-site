@@ -148,7 +148,7 @@ const REELS = Object.entries(MEDIA_DATA.video || {})
 // like a feed rather than a video row followed by a block of photographs.
 const REEL_EVERY = 5;
 
-const INSTA_POSTS = (() => {
+const LOCAL_INSTA_POSTS = (() => {
   const photos = socialPool();
   const queue = [...REELS];
   const posts = [];
@@ -186,12 +186,31 @@ const INSTA_POSTS = (() => {
   return posts;
 })();
 
-function populateInstaGrid(page) {
+const escapeHtml = value => String(value || "").replace(/[&<>"']/g, character => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+})[character]);
+
+async function instagramPosts() {
+  try {
+    const response = await fetch("/api/instagram", { headers: { Accept: "application/json" } });
+    if (!response.ok) throw new Error(`Instagram API returned ${response.status}`);
+    const payload = await response.json();
+    if (!Array.isArray(payload.posts) || !payload.posts.length) throw new Error("Instagram API returned no media");
+    return { posts: payload.posts, live: true };
+  } catch (error) {
+    console.warn("Using the studio media archive because live Instagram media is unavailable.", error);
+    return { posts: LOCAL_INSTA_POSTS, live: false };
+  }
+}
+
+async function populateInstaGrid(page) {
   const grid = document.getElementById("instaGrid");
   if (!grid) return;
   const moreButton = document.getElementById("instaMore");
   const soundToggle = document.getElementById("reelSoundToggle");
-  const posts = INSTA_POSTS;
+  const status = document.getElementById("instaStatus");
+  const { posts, live } = await instagramPosts();
+  if (status) status.textContent = live ? "Live from Instagram" : "Studio media archive";
   const batchSize = 12;
   const homePreview = page === "home";
   let visibleCount = 0;
@@ -236,13 +255,21 @@ function populateInstaGrid(page) {
 
   const renderPosts = additions => {
     const startIndex = visibleCount;
-    grid.insertAdjacentHTML("beforeend", additions.map((p, offset) => `
-    <button type="button" class="insta-cell${p.isVideo ? " insta-video" : ""}" data-insta-index="${startIndex + offset}" aria-label="${p.isVideo ? "Play reel" : "View photo"}: ${p.alt}">
+    grid.insertAdjacentHTML("beforeend", additions.map((p, offset) => {
+      const alt = escapeHtml(p.alt);
+      const poster = p.external ? escapeHtml(p.poster || p.src) : photoSrc(p.src, 400);
+      const photo = p.external
+        ? `<img src="${escapeHtml(p.src)}" alt="${alt}" loading="lazy" decoding="async" />`
+        : image(p.src, p.alt, "", "(max-width: 720px) 45vw, 300px");
+      const likes = Number.isFinite(p.likeCount) ? `♥ ${p.likeCount.toLocaleString()}` : "♡ View";
+      return `
+    <button type="button" class="insta-cell${p.isVideo ? " insta-video" : ""}" data-insta-index="${startIndex + offset}" aria-label="${p.isVideo ? "Play reel" : "View photo"}: ${alt}">
       ${p.isVideo
-        ? `<video class="insta-preview" muted loop playsinline preload="none" poster="${photoSrc(p.src, 400)}" data-src="${p.media}"></video>`
-        : image(p.src, p.alt, "", "(max-width: 720px) 45vw, 300px")}
-      <span class="insta-hover"><b>${p.isVideo ? "▶ Film" : "♡ Like"}</b><small>${p.isVideo ? "Tap to open" : "View photograph"}</small></span>
-    </button>`).join(""));
+        ? `<video class="insta-preview" muted loop playsinline preload="none" poster="${poster}" data-src="${escapeHtml(p.media)}"></video>`
+        : photo}
+      <span class="insta-hover"><b>${p.isVideo ? `▶ Film${Number.isFinite(p.likeCount) ? ` · ♥ ${p.likeCount.toLocaleString()}` : ""}` : likes}</b><small>${p.isVideo ? "Tap to open" : "View photograph"}</small></span>
+    </button>`;
+    }).join(""));
     const cells = [...grid.querySelectorAll("[data-insta-index]")].slice(startIndex);
     cells.forEach(cell => {
     cell.addEventListener("click", () => openInstaViewer(posts[Number(cell.dataset.instaIndex)]));
@@ -286,14 +313,19 @@ function openInstaViewer(post) {
   viewer.setAttribute("role", "dialog");
   viewer.setAttribute("aria-modal", "true");
   viewer.setAttribute("aria-label", post.isVideo ? "Instagram reel player" : "Instagram photo viewer");
+  const poster = post.external ? escapeHtml(post.poster || post.src) : photoSrc(post.src, 900);
+  const photograph = post.external
+    ? `<img src="${escapeHtml(post.src)}" alt="${escapeHtml(post.alt)}">`
+    : `<img src="${photoSrc(post.src)}" srcset="${srcsetFor(post.src)}" sizes="90vw" alt="${post.alt}">`;
   viewer.innerHTML = `
     <button class="insta-viewer-close" type="button" aria-label="Close">×</button>
     <div class="insta-viewer-content">
       ${post.isVideo
-        ? `<video controls autoplay playsinline poster="${photoSrc(post.src, 900)}"><source src="${post.media}" type="video/mp4"></video>`
-        : `<img src="${photoSrc(post.src)}" srcset="${srcsetFor(post.src)}" sizes="90vw" alt="${post.alt}">`}
+        ? `<video controls autoplay playsinline poster="${poster}"><source src="${escapeHtml(post.media)}" type="video/mp4"></video>`
+        : photograph}
       <div class="insta-viewer-caption">
-        <p>${post.alt}</p>
+        <p>${escapeHtml(post.alt)}${Number.isFinite(post.likeCount) ? ` · ♥ ${post.likeCount.toLocaleString()}` : ""}</p>
+        ${post.permalink ? `<a href="${escapeHtml(post.permalink)}" target="_blank" rel="noreferrer">Open on Instagram ↗</a>` : ""}
       </div>
     </div>`;
   document.body.appendChild(viewer);
@@ -427,6 +459,7 @@ function home() {
         </div>
         <div class="insta-actions">
           <button type="button" class="reel-sound-toggle" id="reelSoundToggle" aria-pressed="false"><span>♪</span><b>Enable reel sound</b></button>
+          <span class="insta-status" id="instaStatus">Connecting to Instagram…</span>
           <a href="https://www.instagram.com/r_magic_charms" target="_blank" rel="noreferrer" class="text-link insta-handle">@r_magic_charms <span>↗</span></a>
         </div>
       </div>
@@ -452,6 +485,7 @@ function social() {
         </div>
         <div class="insta-actions">
           <button type="button" class="reel-sound-toggle" id="reelSoundToggle" aria-pressed="false"><span>♪</span><b>Enable reel sound</b></button>
+          <span class="insta-status" id="instaStatus">Connecting to Instagram…</span>
           <a href="https://www.instagram.com/r_magic_charms" target="_blank" rel="noreferrer" class="text-link insta-handle">@r_magic_charms <span>↗</span></a>
         </div>
       </div>

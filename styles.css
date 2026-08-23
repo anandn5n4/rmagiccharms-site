@@ -145,6 +145,7 @@ button,input,select,textarea{font:inherit}
 .insta-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--line)}
 .insta-header h2{font:400 clamp(38px,4.5vw,72px)/.94 var(--serif);letter-spacing:-.02em;margin:12px 0 0}
 .insta-actions{display:flex;align-items:center;gap:22px}
+.insta-status{font:500 9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .insta-handle{font:500 12px var(--display);letter-spacing:.08em;text-transform:uppercase}
 .insta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .insta-cell{display:block;aspect-ratio:1;overflow:hidden;background:#e3d5bf;position:relative;border:0;padding:0;color:#fff;cursor:pointer;text-align:left}

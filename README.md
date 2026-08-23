@@ -6,8 +6,9 @@ South Indian wedding photography portfolio for R Magic Charms.
 
 Run `start.bat`, then open <http://localhost:4173>.
 
-The site is fully static. Nothing is fetched from a local API, so the preview
-behaves exactly like the published site.
+The portfolio is static. In production, the social wall can additionally read
+the studio's own media through a Cloudflare Pages Function. Local preview and
+an unconfigured production deployment fall back to the committed media archive.
 
 ## Adding photographs
 
@@ -59,3 +60,19 @@ hero preload in `index.html` pointing at a file that actually exists.
 `resources/` is committed already built, so Cloudflare only has to serve files.
 Remember to bump the `?v=` cache version in `index.html` after editing
 `app.js`, `styles.css` or `fixes.css`.
+
+### Live Instagram media
+
+`functions/api/instagram.js` securely calls Meta's Graph API. Add these under
+Cloudflare Pages → Settings → Variables and Secrets:
+
+- `INSTAGRAM_USER_ID` — the linked Instagram professional account ID
+- `INSTAGRAM_ACCESS_TOKEN` — a secret long-lived access token; never commit it
+- `INSTAGRAM_API_VERSION` — optional, defaults to `v25.0`
+- `INSTAGRAM_API_BASE` — optional, defaults to `https://graph.facebook.com`
+
+The account must be a Business or Creator account linked to a Facebook Page.
+The token needs `instagram_basic` and `pages_read_engagement`. The endpoint
+returns only display fields to the browser; the token remains inside Cloudflare.
+Reels, photographs, permalinks and available like counts then refresh from
+Instagram automatically, with a ten-minute edge cache.
