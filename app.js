@@ -248,9 +248,19 @@ async function instagramPosts() {
   }
 
   try {
-    const first = await igPage();
-    if (!first.posts.length) throw new Error("Instagram feed returned no posts");
-    return { posts: first.posts, live: true, source: "public", cursor: first.cursor, hasNext: first.hasNext };
+    const collected = [];
+    let cursor = "";
+    let hasNext = true;
+    // One page of the public feed mixes in other accounts, so it rarely fills
+    // the twelve-tile wall on its own. A few pages are gathered up front.
+    for (let page = 0; page < 4 && hasNext && collected.length < 12; page += 1) {
+      const slice = await igPage(cursor);
+      collected.push(...slice.posts);
+      cursor = slice.cursor;
+      hasNext = slice.hasNext;
+    }
+    if (!collected.length) throw new Error("Instagram feed returned no posts");
+    return { posts: collected, live: true, source: "public", cursor, hasNext };
   } catch (error) {
     console.warn("Using the studio media archive because Instagram is unavailable.", error);
     return { posts: LOCAL_INSTA_POSTS, live: false, source: "local" };
