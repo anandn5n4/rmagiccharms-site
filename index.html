@@ -6,12 +6,30 @@
     <meta name="description" content="R Magic Charms â€” South Indian wedding photography preserving sacred rituals, family blessings, and auspicious beginnings." />
     <meta name="theme-color" content="#09090A" />
     <title>R Magic Charms â€” Wedding Photography</title>
-    <link rel="preconnect" href="https://images.unsplash.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260823-21" />
-    <link rel="stylesheet" href="fixes.css?v=20260823-21" />
+
+    <!-- Own stylesheets first so they are the only thing blocking first paint. -->
+    <link rel="stylesheet" href="styles.css?v=20260823-22" />
+    <link rel="stylesheet" href="fixes.css?v=20260823-22" />
+
+    <!-- Google Fonts loaded without blocking render; text paints immediately in
+         the fallback face and swaps in when the webfonts arrive. -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" />
+    </noscript>
+
+    <!-- The page is client-rendered, so tell the browser about the first-paint
+         assets up front instead of waiting for JS to discover them. -->
+    <link rel="preload" as="script" href="content.js?v=20260823-22" />
+    <link rel="preload" as="script" href="app.js?v=20260823-22" />
+    <link rel="preload" as="image" href="resources/optimized/dsc03894.webp" fetchpriority="high" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -19,8 +37,8 @@
     <main id="app" tabindex="-1"></main>
     <footer id="site-footer"></footer>
     <aside class="social-rail" id="socialRail" aria-label="Social and contact links"></aside>
-    <script src="content.js?v=20260823-21"></script>
-    <script src="app.js?v=20260823-21"></script>
+    <script src="content.js?v=20260823-22"></script>
+    <script src="app.js?v=20260823-22"></script>
   </body>
 </html>
 

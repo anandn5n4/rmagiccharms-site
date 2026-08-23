@@ -22,13 +22,13 @@ function link(to, label, className = "") {
 }
 
 function image(src, alt, className = "") {
-  const loading = className.includes("eager") ? "eager" : "lazy";
-  return `<img class="${className}" src="${src}" alt="${alt}" loading="${loading}" />`;
+  const eager = className.includes("eager");
+  return `<img class="${className}" src="${src}" alt="${alt}" loading="${eager ? "eager" : "lazy"}" decoding="async"${eager ? ' fetchpriority="high"' : ""} />`;
 }
 
 function renderHeader() {
   header.innerHTML = `
-    <a href="#home" class="wordmark" aria-label="R Magic Charms home"><img class="brand-mark" src="resources/r-magic-charms-mark.png" alt="" /><span class="wordmark-text">R Magic Charms</span></a>
+    <a href="#home" class="wordmark" aria-label="R Magic Charms home"><img class="brand-mark" src="resources/r-magic-charms-mark.webp" alt="" /><span class="wordmark-text">R Magic Charms</span></a>
     <div class="header-right">
       <button class="menu-toggle" aria-expanded="false" aria-controls="primary-nav"><i></i><i></i><span>Menu</span></button>
       <nav id="primary-nav" aria-label="Main navigation">
@@ -44,7 +44,7 @@ function renderHeader() {
 function renderFooter() {
   footer.innerHTML = `
     <div class="footer-main">
-      <div class="footer-brand"><img src="resources/r-magic-charms-logo.png" alt="R Magic Charms" /><p>South Indian wedding photography, rooted in Karnataka.</p></div>
+      <div class="footer-brand"><img src="resources/r-magic-charms-logo.webp" alt="R Magic Charms" /><p>South Indian wedding photography, rooted in Karnataka.</p></div>
       <div><p class="eyebrow">BASED IN</p><a href="${brand.mapUrl}" target="_blank" rel="noreferrer">${brand.location} ↗</a><p>Available across India and worldwide.</p></div>
       <div><p class="eyebrow">CONNECT</p><a href="tel:+${brand.phoneDigits}">${brand.phoneDisplay}</a><a href="https://www.instagram.com/${brand.instagram}" target="_blank" rel="noreferrer">@${brand.instagram}</a></div>
     </div>
@@ -186,9 +186,7 @@ function home() {
   return `
     <section class="hero hero-video">
       <div class="hero-video-wrap">
-        <video class="hero-vid" autoplay muted loop playsinline preload="metadata" poster="${projects[0].image}">
-          <source src="${MEDIA.heroLoop}" type="video/mp4">
-        </video>
+        <video class="hero-vid" autoplay muted loop playsinline preload="none" poster="${projects[0].image}" data-src="${MEDIA.heroLoop}"></video>
         <div class="hero-video-overlay"></div>
       </div>
       <!-- Animated circle badge (like WeddingBells) -->
@@ -222,37 +220,37 @@ function home() {
       </div>
       <div class="offerings-grid">
         <article class="offering-card offering-large">
-          ${image("resources/editorial/offerings/mehendi.jpg", "Intricate bridal mehendi being applied")}
+          ${image("resources/editorial/offerings/mehendi.webp", "Intricate bridal mehendi being applied")}
           <span class="offering-number">01</span><div><p>COLOUR · LAUGHTER · FAMILY</p><h3>Mehendi &amp; Haldi</h3><b>Explore coverage ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about Mehendi and Haldi coverage"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Indian_Folk_Mehndi_Ceremony_(3).jpg" target="_blank" rel="noreferrer">AmanAgrahari01 · CC BY-SA 4.0</a>
         </article>
         <article class="offering-card offering-prewed">
-          ${image("resources/editorial/offerings/pre-wedding.jpg", "Pre-wedding portrait session by R Magic Charms")}
+          ${image("resources/editorial/offerings/pre-wedding.webp", "Pre-wedding portrait session by R Magic Charms")}
           <span class="offering-number">02</span>
           <div><p>SAVE THE DATE · OUTDOOR · CINEMATIC</p><h3>Pre-Wedding Shoots</h3><b>Plan your shoot ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about pre-wedding photography"></a>
         </article>
         <article class="offering-card offering-reception">
-          ${image("resources/editorial/offerings/reception.jpg", "Indian couple at their wedding reception")}
+          ${image("resources/editorial/offerings/reception.webp", "Indian couple at their wedding reception")}
           <span class="offering-number">03</span><div><p>ELEGANCE · PORTRAITS · TOASTS</p><h3>Reception Stories</h3><b>Explore coverage ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about reception photography"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Indian_couple_at_wedding_reception.png" target="_blank" rel="noreferrer">Gargiekulkarni · CC BY-SA 4.0</a>
         </article>
         <article class="offering-card offering-couple">
-          ${image("resources/editorial/offerings/couple-shoot.jpg", "Indian couple during a pre-wedding portrait session")}
+          ${image("resources/editorial/offerings/couple-shoot.webp", "Indian couple during a pre-wedding portrait session")}
           <span class="offering-number">04</span><div><p>UNHURRIED · AFTER THE RUSH</p><h3>Post-Wedding Portraits</h3><b>Plan your session ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about post-wedding couple portraits"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Couple_Photoshoot_at_The_Lodhi_Garden.jpg" target="_blank" rel="noreferrer">Akarshan Sapra · CC BY-SA 4.0</a>
         </article>
         <article class="offering-card offering-drone">
-          ${image("resources/editorial/offerings/drone-venue.jpg", "Aerial view of an Indian palace venue")}
+          ${image("resources/editorial/offerings/drone-venue.webp", "Aerial view of an Indian palace venue")}
           <span class="offering-number">05</span><div><p>AERIAL PORTRAITS · GRAND PERSPECTIVES</p><h3>Drone Photography</h3><b>See the possibilities ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about drone wedding coverage"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Aerial_View_Umaid_Mahal_Jodhpur.jpg" target="_blank" rel="noreferrer">Daniel Romanson · CC0</a>
         </article>
         <article class="offering-card offering-complete">
-          ${image("resources/editorial/offerings/south-indian-wedding.jpg", "Traditional South Indian wedding ceremony")}
+          ${image("resources/editorial/offerings/south-indian-wedding.webp", "Traditional South Indian wedding ceremony")}
           <span class="offering-number">06</span><div><p>FROM NAANDI TO RECEPTION</p><h3>Complete Wedding Stories</h3><b>Build your collection ↗</b></div>
           <a class="offering-hit" href="#contact" aria-label="Enquire about complete wedding coverage"></a>
           <a class="offering-credit" href="https://commons.wikimedia.org/wiki/File:Traditional_South_Indian_Wedding_Ceremony.jpg" target="_blank" rel="noreferrer">Bhavya Bubbles · CC BY-SA 4.0</a>
@@ -379,7 +377,7 @@ function about() {
   <section class="about-photo-hero">
     <div class="about-hero-inner">
       <figure class="about-photo-frame">
-        ${image("resources/uploads/about/photographer-at-work.jpg", "The R Magic Charms photographer at work")}
+        ${image("resources/uploads/about/photographer-at-work.webp", "The R Magic Charms photographer at work")}
       </figure>
       <div class="about-photo-text">
         <p class="eyebrow">THE PEOPLE BEHIND THE LENS</p>
@@ -403,7 +401,7 @@ function about() {
 
   <section class="about-portrait">
     <figure class="framed-photo">
-      ${image("resources/uploads/about/photographer-at-work.jpg", "The R Magic Charms team photographing a celebration")}
+      ${image("resources/uploads/about/photographer-at-work.webp", "The R Magic Charms team photographing a celebration")}
       <figcaption>On the mantap, working quietly · Karnataka</figcaption>
     </figure>
     <p>R Magic Charms is a South Indian wedding photography team devoted to preserving auspicious beginnings with grace and authenticity.<br><br>We understand that a wedding is more than one day: it is sacred ritual, ancestral tradition, joyful celebration and two families becoming one.</p>
@@ -415,9 +413,9 @@ function about() {
       <span class="heading-note">Temples, palaces &amp; hill country</span>
     </div>
     <div class="strip-grid">
-      <figure>${image("resources/editorial/hampi-temple.jpg", "Temple architecture at Hampi")}<figcaption>Temple weddings</figcaption></figure>
-      <figure>${image("resources/editorial/mysuru-palace.jpg", "Mysuru Palace")}<figcaption>Palace celebrations</figcaption></figure>
-      <figure>${image("resources/editorial/western-ghats.jpg", "The Western Ghats")}<figcaption>Hill-country shoots</figcaption></figure>
+      <figure>${image("resources/editorial/hampi-temple.webp", "Temple architecture at Hampi")}<figcaption>Temple weddings</figcaption></figure>
+      <figure>${image("resources/editorial/mysuru-palace.webp", "Mysuru Palace")}<figcaption>Palace celebrations</figcaption></figure>
+      <figure>${image("resources/editorial/western-ghats.webp", "The Western Ghats")}<figcaption>Hill-country shoots</figcaption></figure>
     </div>
   </section>
 
@@ -431,7 +429,7 @@ function about() {
   </section>
 
   <section class="quote-band">
-    ${image("resources/uploads/portfolio/wedding-blessing-ritual.jpg", "Elders blessing the couple at a South Indian wedding")}
+    ${image("resources/uploads/portfolio/wedding-blessing-ritual.webp", "Elders blessing the couple at a South Indian wedding")}
     <div class="quote-band-scrim"></div>
     <blockquote>
       <p class="eyebrow">WHAT WE BELIEVE</p>
@@ -479,7 +477,12 @@ function ctaBand(title, copy) {
   </section>`;
 }
 
+const IS_LOCAL_PREVIEW = ["localhost", "127.0.0.1", "::1"].includes(location.hostname);
+
 async function populateUploadedImages(page) {
+  // /api/images only exists in the local Python preview server. On the static
+  // host it is a guaranteed miss, so skip the uncacheable round trip entirely.
+  if (!IS_LOCAL_PREVIEW) return;
   const section = page === "contact" ? "about" : page === "work" ? "portfolio" : page;
   const settings = {
     home: { target: "homeUploads", eyebrow: "NEWLY ADDED", title: "Latest <em>frames</em>" },
@@ -514,7 +517,7 @@ function enquirySection() {
   <section class="contact-anchor" id="enquiry">
     <div class="contact-intro"><p class="eyebrow">STUDIO &amp; ENQUIRIES</p><h2>Tell us about your<br><em>auspicious celebration.</em></h2><p>Share your dates, traditions, ceremonies and the families gathering to bless your new beginning. We respond personally and guide you through the next steps.</p></div>
     <section class="contact-choice"><p class="eyebrow">CHOOSE HOW TO REACH US</p><div><a class="contact-choice-card" href="https://wa.me/${brand.phoneDigits}?text=${encodeURIComponent("Namaste R Magic Charms, we are planning our wedding and would like to discuss photography.")}" target="_blank" rel="noreferrer"><span>01</span><h2>Speak with us</h2><p>Tell us about your celebration and the traditions important to your family.</p><b>Open WhatsApp ↗</b></a><button type="button" class="contact-choice-card" data-scroll-inquiry><span>02</span><h2>Share the details</h2><p>Send your ceremonies, dates and location as one formal wedding inquiry.</p><b>Fill the form ↓</b></button></div></section>
-    <section class="contact-layout"><form id="inquiry-form" novalidate><label>Your name<input name="name" autocomplete="name" required placeholder="Bride, groom or family contact" /></label><label>Mobile number<input name="phone" type="tel" autocomplete="tel" required placeholder="+91 98765 43210" /></label><label>Email address (optional)<input name="email" type="email" autocomplete="email" placeholder="you@example.com" /></label><label>What are we celebrating?<select name="kind"><option>Complete wedding celebration</option><option>Pre-Wedding</option><option>Engagement</option><option>Haldi or Mehendi</option><option>Wedding or Muhurtham</option><option>Reception</option><option>Couple or portrait shoot</option><option>Post-Wedding</option><option>We would like your guidance</option></select></label><label>Event date and location<input name="event" required placeholder="12 December 2026, Bengaluru" /></label><label>Tell us about the ceremonies<textarea name="message" required placeholder="Traditions, rituals, number of days and the moments important to your family…"></textarea></label><button type="submit" class="submit-button">Review &amp; send on WhatsApp <span>↗</span></button><p class="form-note">Submitting opens WhatsApp with your details. Review the message and tap Send so your inquiry reaches R Magic Charms directly.</p><p class="form-status" aria-live="polite"></p></form><aside><figure class="aside-photo">${image("resources/uploads/portfolio/intimate-couple-portrait.jpg", "A quiet moment between a couple")}</figure><p class="eyebrow">R MAGIC CHARMS</p><a href="tel:+${brand.phoneDigits}">${brand.phoneDisplay}</a>${emailLink}<p><a href="${brand.mapUrl}" target="_blank" rel="noreferrer">${brand.location} ↗</a><br>Available across India and worldwide</p><div><a href="https://wa.me/${brand.phoneDigits}" target="_blank" rel="noreferrer">Formal WhatsApp enquiry ↗</a><a href="https://www.instagram.com/${brand.instagram}" target="_blank" rel="noreferrer">@${brand.instagram} ↗</a></div></aside></section>
+    <section class="contact-layout"><form id="inquiry-form" novalidate><label>Your name<input name="name" autocomplete="name" required placeholder="Bride, groom or family contact" /></label><label>Mobile number<input name="phone" type="tel" autocomplete="tel" required placeholder="+91 98765 43210" /></label><label>Email address (optional)<input name="email" type="email" autocomplete="email" placeholder="you@example.com" /></label><label>What are we celebrating?<select name="kind"><option>Complete wedding celebration</option><option>Pre-Wedding</option><option>Engagement</option><option>Haldi or Mehendi</option><option>Wedding or Muhurtham</option><option>Reception</option><option>Couple or portrait shoot</option><option>Post-Wedding</option><option>We would like your guidance</option></select></label><label>Event date and location<input name="event" required placeholder="12 December 2026, Bengaluru" /></label><label>Tell us about the ceremonies<textarea name="message" required placeholder="Traditions, rituals, number of days and the moments important to your family…"></textarea></label><button type="submit" class="submit-button">Review &amp; send on WhatsApp <span>↗</span></button><p class="form-note">Submitting opens WhatsApp with your details. Review the message and tap Send so your inquiry reaches R Magic Charms directly.</p><p class="form-status" aria-live="polite"></p></form><aside><figure class="aside-photo">${image("resources/uploads/portfolio/intimate-couple-portrait.webp", "A quiet moment between a couple")}</figure><p class="eyebrow">R MAGIC CHARMS</p><a href="tel:+${brand.phoneDigits}">${brand.phoneDisplay}</a>${emailLink}<p><a href="${brand.mapUrl}" target="_blank" rel="noreferrer">${brand.location} ↗</a><br>Available across India and worldwide</p><div><a href="https://wa.me/${brand.phoneDigits}" target="_blank" rel="noreferrer">Formal WhatsApp enquiry ↗</a><a href="https://www.instagram.com/${brand.instagram}" target="_blank" rel="noreferrer">@${brand.instagram} ↗</a></div></aside></section>
   </section>`;
 }
 
@@ -532,7 +535,7 @@ function contact() {
       </div>
     </div>
     <figure class="framed-photo">
-      ${image("resources/uploads/portfolio/wedding-forehead-blessing.jpg", "A blessing given at a South Indian wedding")}
+      ${image("resources/uploads/portfolio/wedding-forehead-blessing.webp", "A blessing given at a South Indian wedding")}
       <figcaption>A blessing, quietly received · Karnataka</figcaption>
     </figure>
   </section>
@@ -540,7 +543,7 @@ function contact() {
   ${enquirySection()}
 
   <section class="quote-band">
-    ${image("resources/uploads/portfolio/south-indian-wedding-portrait.jpg", "South Indian bride and groom at the muhurtham")}
+    ${image("resources/uploads/portfolio/south-indian-wedding-portrait.webp", "South Indian bride and groom at the muhurtham")}
     <div class="quote-band-scrim"></div>
     <blockquote>
       <p class="eyebrow">WHY FAMILIES CHOOSE US</p>
@@ -577,9 +580,39 @@ function render() {
   observeReveals();
   bindForm();
   bindFilters();
+  if (page === "home") bindHeroVideo();
   if (page === "home") bindHeroSound();
   if (page === "home") populateInstaGrid();
   if (["home", "about", "contact", "work"].includes(page)) populateUploadedImages(page);
+}
+
+// The hero loop is by far the heaviest asset on the page. Its poster paints
+// straight away, and the video itself only starts downloading once the rest of
+// the first screen has settled, so it never competes for bandwidth with the
+// stylesheet, fonts and above-the-fold photographs.
+function bindHeroVideo() {
+  const video = document.querySelector(".hero-vid");
+  if (!video || video.dataset.loaded) return;
+
+  const start = () => {
+    if (video.dataset.loaded) return;
+    // Respect data-saver and slow connections: the poster frame already carries
+    // the page, so a 5 MB loop is not worth forcing on a 3G phone.
+    const net = navigator.connection;
+    if (net && (net.saveData || /^([23]g|slow-2g)$/.test(net.effectiveType || ""))) return;
+    video.dataset.loaded = "1";
+    video.src = video.dataset.src;
+    video.load();
+    video.play().catch(() => {});
+  };
+
+  const schedule = () => {
+    if (window.requestIdleCallback) requestIdleCallback(start, { timeout: 1500 });
+    else setTimeout(start, 600);
+  };
+
+  if (document.readyState === "complete") schedule();
+  else window.addEventListener("load", schedule, { once: true });
 }
 
 function syncHeroSoundButton(video, button) {
@@ -596,6 +629,10 @@ function bindHeroSound() {
   if (!video || !button) return;
 
   button.addEventListener("click", async () => {
+    if (!video.dataset.loaded && video.dataset.src) {
+      video.dataset.loaded = "1";
+      video.src = video.dataset.src;
+    }
     video.muted = !video.muted;
     video.volume = 0.8;
     await video.play().catch(() => {

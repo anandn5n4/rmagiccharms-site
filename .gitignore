@@ -21,3 +21,6 @@ resources/web/
 # Additional source masters
 resources/source/
 resources/masters/
+
+# Pre-optimisation originals kept locally so image conversion is reversible.
+resources/_originals/

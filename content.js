@@ -11,19 +11,19 @@
 // ============================================================================
 
 const MEDIA = {
-  local1: "resources/optimized/dsc01427.jpg",
-  local2: "resources/optimized/dsc03894.jpg",
-  local3: "resources/optimized/dsc04345.jpg",
-  local4: "resources/optimized/dsc04357.jpg",
-  local5: "resources/optimized/dsc01310.jpg",
-  westernGhats: "resources/editorial/western-ghats.jpg",
-  mysuruPalace: "resources/editorial/mysuru-palace.jpg",
-  hampiTemple: "resources/editorial/hampi-temple.jpg",
+  local1: "resources/optimized/dsc01427.webp",
+  local2: "resources/optimized/dsc03894.webp",
+  local3: "resources/optimized/dsc04345.webp",
+  local4: "resources/optimized/dsc04357.webp",
+  local5: "resources/optimized/dsc01310.webp",
+  westernGhats: "resources/editorial/western-ghats.webp",
+  mysuruPalace: "resources/editorial/mysuru-palace.webp",
+  hampiTemple: "resources/editorial/hampi-temple.webp",
   heroLoop: "resources/web/hero-loop.mp4",
-  instagram1: "resources/uploads/portfolio/couple-market-moment.jpg",
-  instagram2: "resources/uploads/portfolio/groom-urban-portrait.jpg",
-  instagram3: "resources/uploads/portfolio/intimate-couple-portrait.jpg",
-  instagram4: "resources/uploads/portfolio/wedding-blessing-ritual.jpg",
+  instagram1: "resources/uploads/portfolio/couple-market-moment.webp",
+  instagram2: "resources/uploads/portfolio/groom-urban-portrait.webp",
+  instagram3: "resources/uploads/portfolio/intimate-couple-portrait.webp",
+  instagram4: "resources/uploads/portfolio/wedding-blessing-ritual.webp",
 };
 
 window.RMAGIC_CONTENT = {
