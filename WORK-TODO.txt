@@ -1,0 +1,124 @@
+R MAGIC CHARMS - INSTAGRAM API TODO
+==================================
+
+CURRENT STATUS
+--------------
+
+The website currently reads the public @r_magic_charms feed through a
+Cloudflare endpoint. It can show real photographs, playable reels and the
+like counts returned by that public feed.
+
+This public method is temporary. It depends on a third-party public feed and
+can stop working without notice. The official Meta API integration is already
+built into the website and should replace it when the client is ready.
+
+
+WHAT TO ASK THE CLIENT
+----------------------
+
+1. Confirm @r_magic_charms is an Instagram Business or Creator account.
+2. Confirm it is linked to a Facebook Page owned by the client.
+3. Ask the client to create or use a Meta Developer account:
+   https://developers.facebook.com/
+4. Ask the client to keep the Facebook Page and Instagram account credentials
+   private. Never send passwords or access tokens over WhatsApp.
+
+
+CREATE THE META APP
+-------------------
+
+1. Sign in at https://developers.facebook.com/
+2. Open My Apps and choose Create App.
+3. Select the business use case for managing a business's Instagram content.
+4. Connect the client's Facebook Business portfolio if Meta asks.
+5. Add the Instagram API product to the app.
+6. Add the Facebook Page that is linked to @r_magic_charms.
+7. Add the client's Facebook account as an app administrator or tester while
+   the app is still in development mode.
+
+
+PERMISSIONS NEEDED
+------------------
+
+Request these permissions/scopes:
+
+  instagram_basic
+  pages_read_engagement
+
+For the account's own media these provide the media list, reel/video URLs,
+thumbnails, captions, permalinks and available like/comment counts.
+
+
+GET THE TWO VALUES
+------------------
+
+Use Meta's Graph API Explorer or the Instagram API setup screen to:
+
+1. Generate a user access token with the permissions above.
+2. Exchange it for a long-lived token following Meta's current instructions.
+3. Find the linked Instagram professional account ID.
+
+The two final values are:
+
+  INSTAGRAM_USER_ID
+  INSTAGRAM_ACCESS_TOKEN
+
+Treat the access token like a password. Do not put it in this repository,
+email it, paste it into app.js, or send it in normal chat.
+
+
+ADD THEM TO CLOUDFLARE
+----------------------
+
+1. Open Cloudflare Dashboard.
+2. Open Workers & Pages.
+3. Open the Pages project serving oneservepro.com.
+4. Open Settings -> Variables and Secrets.
+5. Add INSTAGRAM_USER_ID as a normal variable.
+6. Add INSTAGRAM_ACCESS_TOKEN as an encrypted secret.
+7. Add the values to Production, and Preview too if preview deployments should
+   use Instagram.
+8. Save and redeploy the latest main branch.
+
+Optional:
+
+  INSTAGRAM_API_VERSION = v25.0
+
+If Meta has released a newer supported version by the time this is completed,
+use that current version instead.
+
+
+VERIFY
+------
+
+Open:
+
+  https://oneservepro.com/api/instagram
+
+The JSON response should contain:
+
+  "source": "official"
+
+Then open the website and confirm:
+
+1. The Instagram section says "Live via Instagram API".
+2. All account reels appear as video tiles.
+3. Reels play on hover and in view on touch devices.
+4. Photographs show real like counts on hover where Instagram supplies them.
+5. Clicking a tile opens the media and offers "Open on Instagram".
+
+
+MAINTENANCE
+-----------
+
+Long-lived Meta tokens can expire or be invalidated when passwords, roles or
+business permissions change. If the section says "Studio media archive" or
+the API endpoint returns an error:
+
+1. Check the Cloudflare Function logs.
+2. Generate a fresh long-lived token.
+3. Replace only the encrypted INSTAGRAM_ACCESS_TOKEN secret.
+4. Redeploy.
+
+Never delete the local media fallback. It keeps the section useful if either
+Instagram or the public feed is temporarily unavailable.

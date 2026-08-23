@@ -42,9 +42,86 @@ function normalize(item) {
   };
 }
 
+function count(value) {
+  if (Number.isFinite(value)) return value;
+  const match = String(value || "").trim().toLowerCase().match(/^([\d.]+)([km])?$/);
+  if (!match) return null;
+  const multiplier = match[2] === "m" ? 1000000 : match[2] === "k" ? 1000 : 1;
+  const result = Math.round(Number(match[1]) * multiplier);
+  return result >= 0 ? result : null;
+}
+
+function mediaProxy(source) {
+  return `/api/instagram-media?url=${encodeURIComponent(source)}`;
+}
+
+function normalizePublic(item) {
+  if (item.owner?.username !== "r_magic_charms" || !item.src || !item.thumb) return null;
+  const isVideo = Boolean(item.isVideo);
+  return {
+    id: item.id || item.code,
+    external: true,
+    isVideo,
+    src: mediaProxy(item.thumb),
+    poster: mediaProxy(item.thumb),
+    media: isVideo ? mediaProxy(item.src) : "",
+    alt: (item.alt || (isVideo ? "Instagram reel" : "Instagram photograph")).slice(0, 240),
+    likeCount: count(item.likeCount),
+    commentsCount: count(item.commentCount),
+    permalink: item.code
+      ? `https://www.instagram.com/${isVideo ? "reel" : "p"}/${item.code}/`
+      : "https://www.instagram.com/r_magic_charms/",
+    timestamp: item.date || "",
+  };
+}
+
+async function publicPosts() {
+  const posts = [];
+  const seen = new Set();
+  let cursor = "";
+
+  for (let page = 0; page < 10; page += 1) {
+    const url = new URL("https://imginn.com/api/posts/");
+    url.searchParams.set("id", "70367859285");
+    if (cursor) url.searchParams.set("cursor", cursor);
+    const response = await fetch(url.toString(), {
+      headers: {
+        Accept: "application/json",
+        Referer: "https://imginn.com/",
+        "User-Agent": "Mozilla/5.0 (compatible; RMagicCharms/1.0)",
+      },
+      cf: { cacheTtl: 600, cacheEverything: true },
+    });
+    if (!response.ok) throw new Error(`Public Instagram feed returned ${response.status}`);
+    const payload = await response.json();
+    for (const item of payload.items || []) {
+      const post = normalizePublic(item);
+      if (post && !seen.has(post.id)) {
+        seen.add(post.id);
+        posts.push(post);
+      }
+    }
+    cursor = payload.cursor || "";
+    if (!payload.hasNext || !cursor) break;
+  }
+
+  return posts;
+}
+
 export async function onRequestGet({ env }) {
   if (!env.INSTAGRAM_USER_ID || !env.INSTAGRAM_ACCESS_TOKEN) {
-    return json({ error: "Instagram integration is not configured" }, 503);
+    try {
+      const posts = await publicPosts();
+      if (!posts.length) return json({ error: "Public Instagram feed returned no media" }, 502);
+      return json(
+        { posts, source: "public", fetchedAt: new Date().toISOString() },
+        200,
+        "public, max-age=300, s-maxage=600, stale-while-revalidate=3600",
+      );
+    } catch (error) {
+      console.error("Public Instagram request failed", error);
+      return json({ error: "Instagram could not be reached" }, 502);
+    }
   }
 
   const version = env.INSTAGRAM_API_VERSION || "v25.0";
@@ -79,7 +156,7 @@ export async function onRequestGet({ env }) {
 
     const posts = media.map(normalize).filter(Boolean);
     return json(
-      { posts, fetchedAt: new Date().toISOString() },
+      { posts, source: "official", fetchedAt: new Date().toISOString() },
       200,
       "public, max-age=300, s-maxage=600, stale-while-revalidate=86400",
     );

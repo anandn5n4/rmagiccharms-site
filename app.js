@@ -196,10 +196,10 @@ async function instagramPosts() {
     if (!response.ok) throw new Error(`Instagram API returned ${response.status}`);
     const payload = await response.json();
     if (!Array.isArray(payload.posts) || !payload.posts.length) throw new Error("Instagram API returned no media");
-    return { posts: payload.posts, live: true };
+    return { posts: payload.posts, live: true, source: payload.source };
   } catch (error) {
     console.warn("Using the studio media archive because live Instagram media is unavailable.", error);
-    return { posts: LOCAL_INSTA_POSTS, live: false };
+    return { posts: LOCAL_INSTA_POSTS, live: false, source: "local" };
   }
 }
 
@@ -209,8 +209,10 @@ async function populateInstaGrid(page) {
   const moreButton = document.getElementById("instaMore");
   const soundToggle = document.getElementById("reelSoundToggle");
   const status = document.getElementById("instaStatus");
-  const { posts, live } = await instagramPosts();
-  if (status) status.textContent = live ? "Live from Instagram" : "Studio media archive";
+  const { posts, live, source } = await instagramPosts();
+  if (status) status.textContent = live
+    ? (source === "official" ? "Live via Instagram API" : "Live from public Instagram")
+    : "Studio media archive";
   const batchSize = 12;
   const homePreview = page === "home";
   let visibleCount = 0;
